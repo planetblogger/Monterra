@@ -1,7 +1,7 @@
 {
   "head-look": {
     "type": "header",
-    "description": "Darstellung"
+    "description": "Appearance"
   },
   "icon-size": {
     "type": "spinbutton",
@@ -10,12 +10,12 @@
     "max": 96,
     "step": 2,
     "units": "px",
-    "description": "Symbolgröße"
+    "description": "Icon size"
   },
   "magnify": {
     "type": "switch",
     "default": true,
-    "description": "Symbole beim Überfahren vergrößern"
+    "description": "Magnify icons on hover"
   },
   "magnify-size": {
     "type": "spinbutton",
@@ -24,50 +24,50 @@
     "max": 128,
     "step": 2,
     "units": "px",
-    "description": "Größe bei Vergrößerung",
+    "description": "Magnified size",
     "dependency": "magnify"
   },
   "style": {
     "type": "combobox",
     "default": "auto",
-    "description": "Stil",
+    "description": "Style",
     "options": {
-      "Automatisch (nach Cinnamon-Theme)": "auto",
-      "Hell": "light",
-      "Dunkel": "dark"
+      "Automatic (follows Cinnamon theme)": "auto",
+      "Light": "light",
+      "Dark": "dark"
     }
   },
   "head-behaviour": {
     "type": "header",
-    "description": "Verhalten"
+    "description": "Behaviour"
   },
   "autohide": {
     "type": "switch",
     "default": false,
-    "description": "Automatisch ausblenden, sobald ein Fenster das Dock überdeckt"
+    "description": "Hide automatically when a window covers the dock"
   },
   "click-minimize": {
     "type": "switch",
     "default": true,
-    "description": "Klick auf das aktive Programm minimiert es"
+    "description": "Clicking the active app minimises it"
   },
   "show-running": {
     "type": "switch",
     "default": true,
-    "description": "Laufende, nicht angeheftete Programme anzeigen"
+    "description": "Show running apps that are not pinned"
   },
   "show-trash": {
     "type": "switch",
     "default": true,
-    "description": "Papierkorb anzeigen"
+    "description": "Show trash"
   },
   "head-separators": {
     "type": "header",
-    "description": "Trenner"
+    "description": "Separators"
   },
   "separators-help": {
     "type": "label",
-    "description": "Trenner zwischen angehefteten Programmen: Rechtsklick auf ein Programm → „Trenner links/rechts einfügen“. Verschieben per Drag-and-Drop, entfernen per Rechtsklick auf den Trenner."
+    "description": "Separators between pinned apps: right-click an app → “Insert Separator Left/Right”. Move them by drag and drop, remove them by right-clicking the separator."
   },
   "separators": {
     "type": "generic",

@@ -22,6 +22,12 @@ const Settings = imports.ui.settings;
 const Util = imports.misc.util;
 
 const UUID = "monterra-dock@monterra";
+const Gettext = imports.gettext;
+Gettext.bindtextdomain(UUID, GLib.get_home_dir() + "/.local/share/locale");
+function _(str) {
+    const t = Gettext.dgettext(UUID, str);
+    return t !== str ? t : Gettext.gettext(str);
+}
 const MARGIN = 6;            // gap between dock and screen edge (logical px)
 const PAD_X = 7;             // horizontal padding inside the dock background
 const PAD_TOP = 6;           // space above the icons inside the background
@@ -237,14 +243,14 @@ class DockItem {
         }
 
         this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
-        const nw = new PopupMenu.PopupMenuItem("Neues Fenster");
+        const nw = new PopupMenu.PopupMenuItem(_("New Window"));
         nw.connect("activate", () => this.launch());
         this.menu.addMenuItem(nw);
 
         const id = this.app.get_id();
         const favs = AppFavorites.getAppFavorites();
         if (!this.app.is_window_backed()) {
-            const keep = new PopupMenu.PopupMenuItem(favs.isFavorite(id) ? "Aus dem Dock entfernen" : "Im Dock behalten");
+            const keep = new PopupMenu.PopupMenuItem(favs.isFavorite(id) ? _("Remove from Dock") : _("Keep in Dock"));
             keep.connect("activate", () => {
                 if (favs.isFavorite(id)) {
                     this.dock.onUnpin(global.settings.get_strv("favorite-apps").indexOf(id));
@@ -258,12 +264,12 @@ class DockItem {
                 const ids = global.settings.get_strv("favorite-apps");
                 const pos = ids.indexOf(id);
                 if (pos > 0) {
-                    const left = new PopupMenu.PopupMenuItem("Nach links verschieben");
+                    const left = new PopupMenu.PopupMenuItem(_("Move Left"));
                     left.connect("activate", () => favs.moveFavoriteToPos(id, pos - 1));
                     this.menu.addMenuItem(left);
                 }
                 if (pos >= 0 && pos < ids.length - 1) {
-                    const right = new PopupMenu.PopupMenuItem("Nach rechts verschieben");
+                    const right = new PopupMenu.PopupMenuItem(_("Move Right"));
                     right.connect("activate", () => favs.moveFavoriteToPos(id, pos + 1));
                     this.menu.addMenuItem(right);
                 }
@@ -271,8 +277,8 @@ class DockItem {
                 const seps = this.dock.separatorPositions();
                 const n = favs.getFavorites().length;
                 const sepItems = [];
-                if (pos > 0 && !seps.includes(pos)) sepItems.push(["Trenner links einfügen", pos]);
-                if (pos >= 0 && pos + 1 < n && !seps.includes(pos + 1)) sepItems.push(["Trenner rechts einfügen", pos + 1]);
+                if (pos > 0 && !seps.includes(pos)) sepItems.push([_("Insert Separator Left"), pos]);
+                if (pos >= 0 && pos + 1 < n && !seps.includes(pos + 1)) sepItems.push([_("Insert Separator Right"), pos + 1]);
                 if (sepItems.length) {
                     this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
                     sepItems.forEach(([text, p]) => {
@@ -286,7 +292,7 @@ class DockItem {
 
         if (wins.length > 0) {
             this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
-            const quit = new PopupMenu.PopupMenuItem(wins.length > 1 ? `Alle ${wins.length} Fenster schließen` : "Beenden");
+            const quit = new PopupMenu.PopupMenuItem(wins.length > 1 ? _("Close All %d Windows").replace("%d", wins.length) : _("Quit"));
             quit.connect("activate", () => {
                 wins.forEach(w => w.delete(global.get_current_time()));
             });
@@ -294,7 +300,7 @@ class DockItem {
         }
 
         this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
-        const prefs = new PopupMenu.PopupMenuItem("Dock-Einstellungen …");
+        const prefs = new PopupMenu.PopupMenuItem(_("Dock Settings …"));
         prefs.connect("activate", () => Util.spawnCommandLine("xlet-settings extension " + UUID));
         this.menu.addMenuItem(prefs);
 
@@ -325,7 +331,7 @@ class TrashItem {
         this.actor.add_child(this.iconBox);
         this.dot = new St.Widget({ style_class: "monterra-dock-dot", opacity: 0 });
         this.actor.add_child(this.dot);
-        this.app = { get_name: () => "Papierkorb", get_id: () => "monterra-trash" };
+        this.app = { get_name: () => _("Trash"), get_id: () => "monterra-trash" };
         this.pinned = false;
         this.menu = null;
 
@@ -366,10 +372,10 @@ class TrashItem {
                 this.menu.actor.hide();
                 this.menuManager.addMenu(this.menu);
                 this.menu.connect("open-state-changed", (m, open) => this.dock.onMenuOpen(open));
-                const open = new PopupMenu.PopupMenuItem("Öffnen");
+                const open = new PopupMenu.PopupMenuItem(_("Open"));
                 open.connect("activate", () => Gio.AppInfo.launch_default_for_uri("trash:///", null));
                 this.menu.addMenuItem(open);
-                const empty = new PopupMenu.PopupMenuItem("Papierkorb leeren …");
+                const empty = new PopupMenu.PopupMenuItem(_("Empty Trash …"));
                 empty.connect("activate", () => Util.spawn(["gio", "trash", "--empty"]));
                 this.menu.addMenuItem(empty);
             }
@@ -393,7 +399,7 @@ class DockSeparator {
         this.dock = dock;
         this.menu = null;
         this.isMonterraSeparator = true;
-        this.app = { get_name: () => "Trenner", get_id: () => "monterra-separator" };
+        this.app = { get_name: () => _("Separator"), get_id: () => "monterra-separator" };
         this.actor = new St.Widget({ style_class: "monterra-dock-user-sep", reactive: true });
         this.actor._delegate = this;
         this.line = new St.Widget({ style_class: "monterra-dock-separator", opacity: 0 });
@@ -425,17 +431,17 @@ class DockSeparator {
             this.menu.actor.hide();
             this.menuManager.addMenu(this.menu);
             this.menu.connect("open-state-changed", (m, open) => this.dock.onMenuOpen(open));
-            const title = new PopupMenu.PopupMenuItem("Trenner", { reactive: false });
+            const title = new PopupMenu.PopupMenuItem(_("Separator"), { reactive: false });
             title.label.add_style_class_name("monterra-dock-menu-title");
             this.menu.addMenuItem(title);
-            const hint = new PopupMenu.PopupMenuItem("Zum Verschieben mit der Maus ziehen", { reactive: false });
+            const hint = new PopupMenu.PopupMenuItem(_("Drag with the mouse to move"), { reactive: false });
             this.menu.addMenuItem(hint);
             this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
-            const rm = new PopupMenu.PopupMenuItem("Trenner entfernen");
+            const rm = new PopupMenu.PopupMenuItem(_("Remove Separator"));
             rm.connect("activate", () => this.dock.removeSeparator(this));
             this.menu.addMenuItem(rm);
             this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
-            const prefs = new PopupMenu.PopupMenuItem("Dock-Einstellungen …");
+            const prefs = new PopupMenu.PopupMenuItem(_("Dock Settings …"));
             prefs.connect("activate", () => Util.spawnCommandLine("xlet-settings extension " + UUID));
             this.menu.addMenuItem(prefs);
         }

@@ -39,6 +39,7 @@ PY
 if [ "$1" = "--remove" ]; then
   edit_list remove enabled-extensions "$UUID"
   rm -rf "$DEST"
+  rm -f "$HOME"/.local/share/locale/*/LC_MESSAGES/"$UUID".mo
   if [ -f "$PANEL_BACKUP" ]; then
     while IFS='=' read -r key value; do
       [ -n "$key" ] && gsettings set org.cinnamon "$key" "$value"
@@ -58,6 +59,14 @@ fi
 mkdir -p "$(dirname "$DEST")"
 rm -rf "$DEST"
 cp -r "$ROOT/komponenten/dock/$UUID" "$DEST"
+
+# Übersetzungen (Deutsch, Spanisch) – Cinnamon sucht sie in ~/.local/share/locale
+for mo in "$DEST"/locale/*/LC_MESSAGES/"$UUID".mo; do
+  [ -f "$mo" ] || continue
+  lang=$(basename "$(dirname "$(dirname "$mo")")")
+  mkdir -p "$HOME/.local/share/locale/$lang/LC_MESSAGES"
+  cp "$mo" "$HOME/.local/share/locale/$lang/LC_MESSAGES/"
+done
 
 # 2) Optional: untere Panels entfernen (Dock übernimmt deren Aufgabe)
 if [ "$1" = "--ohne-panel" ]; then

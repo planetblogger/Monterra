@@ -1,0 +1,110 @@
+# Monterra Dock – es
+msgid ""
+msgstr ""
+"Project-Id-Version: monterra-dock@monterra 1.4\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "New Window"
+msgstr "Nueva ventana"
+
+msgid "Remove from Dock"
+msgstr "Quitar del dock"
+
+msgid "Keep in Dock"
+msgstr "Mantener en el dock"
+
+msgid "Move Left"
+msgstr "Mover a la izquierda"
+
+msgid "Move Right"
+msgstr "Mover a la derecha"
+
+msgid "Insert Separator Left"
+msgstr "Insertar separador a la izquierda"
+
+msgid "Insert Separator Right"
+msgstr "Insertar separador a la derecha"
+
+msgid "Close All %d Windows"
+msgstr "Cerrar las %d ventanas"
+
+msgid "Quit"
+msgstr "Salir"
+
+msgid "Dock Settings …"
+msgstr "Ajustes del dock …"
+
+msgid "Trash"
+msgstr "Papelera"
+
+msgid "Open"
+msgstr "Abrir"
+
+msgid "Empty Trash …"
+msgstr "Vaciar papelera …"
+
+msgid "Separator"
+msgstr "Separador"
+
+msgid "Drag with the mouse to move"
+msgstr "Arrastra con el ratón para mover"
+
+msgid "Remove Separator"
+msgstr "Quitar separador"
+
+msgid "Monterra Dock"
+msgstr "Monterra Dock"
+
+msgid "Slim, elegant dock: pinned and running apps, smooth magnification, drag-and-drop sorting, freely placeable separators, trash, auto-hide."
+msgstr "Dock fino y elegante: aplicaciones ancladas y abiertas, ampliación fluida, ordenar arrastrando, separadores libres, papelera y ocultación automática."
+
+msgid "Appearance"
+msgstr "Apariencia"
+
+msgid "Icon size"
+msgstr "Tamaño de los iconos"
+
+msgid "Magnify icons on hover"
+msgstr "Ampliar los iconos al pasar el ratón"
+
+msgid "Magnified size"
+msgstr "Tamaño ampliado"
+
+msgid "Style"
+msgstr "Estilo"
+
+msgid "Automatic (follows Cinnamon theme)"
+msgstr "Automático (según el tema de Cinnamon)"
+
+msgid "Light"
+msgstr "Claro"
+
+msgid "Dark"
+msgstr "Oscuro"
+
+msgid "Behaviour"
+msgstr "Comportamiento"
+
+msgid "Hide automatically when a window covers the dock"
+msgstr "Ocultar automáticamente cuando una ventana cubra el dock"
+
+msgid "Clicking the active app minimises it"
+msgstr "Al hacer clic en la aplicación activa, se minimiza"
+
+msgid "Show running apps that are not pinned"
+msgstr "Mostrar aplicaciones abiertas no ancladas"
+
+msgid "Show trash"
+msgstr "Mostrar la papelera"
+
+msgid "Separators"
+msgstr "Separadores"
+
+msgid "Separators between pinned apps: right-click an app → “Insert Separator Left/Right”. Move them by drag and drop, remove them by right-clicking the separator."
+msgstr "Separadores entre aplicaciones ancladas: clic derecho en una aplicación → «Insertar separador a la izquierda/derecha». Muévelos arrastrando y quítalos con clic derecho sobre el separador."
+
+msgid "px"
+msgstr "px"

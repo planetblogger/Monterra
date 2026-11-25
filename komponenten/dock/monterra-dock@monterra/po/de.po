@@ -1,0 +1,110 @@
+# Monterra Dock – de
+msgid ""
+msgstr ""
+"Project-Id-Version: monterra-dock@monterra 1.4\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "New Window"
+msgstr "Neues Fenster"
+
+msgid "Remove from Dock"
+msgstr "Aus dem Dock entfernen"
+
+msgid "Keep in Dock"
+msgstr "Im Dock behalten"
+
+msgid "Move Left"
+msgstr "Nach links verschieben"
+
+msgid "Move Right"
+msgstr "Nach rechts verschieben"
+
+msgid "Insert Separator Left"
+msgstr "Trenner links einfügen"
+
+msgid "Insert Separator Right"
+msgstr "Trenner rechts einfügen"
+
+msgid "Close All %d Windows"
+msgstr "Alle %d Fenster schließen"
+
+msgid "Quit"
+msgstr "Beenden"
+
+msgid "Dock Settings …"
+msgstr "Dock-Einstellungen …"
+
+msgid "Trash"
+msgstr "Papierkorb"
+
+msgid "Open"
+msgstr "Öffnen"
+
+msgid "Empty Trash …"
+msgstr "Papierkorb leeren …"
+
+msgid "Separator"
+msgstr "Trenner"
+
+msgid "Drag with the mouse to move"
+msgstr "Zum Verschieben mit der Maus ziehen"
+
+msgid "Remove Separator"
+msgstr "Trenner entfernen"
+
+msgid "Monterra Dock"
+msgstr "Monterra Dock"
+
+msgid "Slim, elegant dock: pinned and running apps, smooth magnification, drag-and-drop sorting, freely placeable separators, trash, auto-hide."
+msgstr "Schlankes, elegantes Dock: angeheftete und laufende Programme, flüssige Vergrößerung, Sortieren per Drag-and-Drop, frei platzierbare Trenner, Papierkorb, automatisches Ausblenden."
+
+msgid "Appearance"
+msgstr "Darstellung"
+
+msgid "Icon size"
+msgstr "Symbolgröße"
+
+msgid "Magnify icons on hover"
+msgstr "Symbole beim Überfahren vergrößern"
+
+msgid "Magnified size"
+msgstr "Größe bei Vergrößerung"
+
+msgid "Style"
+msgstr "Stil"
+
+msgid "Automatic (follows Cinnamon theme)"
+msgstr "Automatisch (nach Cinnamon-Theme)"
+
+msgid "Light"
+msgstr "Hell"
+
+msgid "Dark"
+msgstr "Dunkel"
+
+msgid "Behaviour"
+msgstr "Verhalten"
+
+msgid "Hide automatically when a window covers the dock"
+msgstr "Automatisch ausblenden, sobald ein Fenster das Dock überdeckt"
+
+msgid "Clicking the active app minimises it"
+msgstr "Klick auf das aktive Programm minimiert es"
+
+msgid "Show running apps that are not pinned"
+msgstr "Laufende, nicht angeheftete Programme anzeigen"
+
+msgid "Show trash"
+msgstr "Papierkorb anzeigen"
+
+msgid "Separators"
+msgstr "Trenner"
+
+msgid "Separators between pinned apps: right-click an app → “Insert Separator Left/Right”. Move them by drag and drop, remove them by right-clicking the separator."
+msgstr "Trenner zwischen angehefteten Programmen: Rechtsklick auf ein Programm → „Trenner links/rechts einfügen“. Verschieben per Drag-and-Drop, entfernen per Rechtsklick auf den Trenner."
+
+msgid "px"
+msgstr "px"
