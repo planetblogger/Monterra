@@ -1,0 +1,407 @@
+// =====================================================================
+//  Monterra – Schicht für GTK 3 (wird nach Mint-Y geladen)
+//
+//  Diese Datei gilt auch für die Systemrahmen von Cinnamon: Muffin zeichnet
+//  Titelleiste und Knöpfe aus den Knoten window.background.ssd > decoration >
+//  headerbar.titlebar.default-decoration > button.titlebutton.
+//  Es werden nur Farben, Radien und Abstände gesetzt – keine Rahmenbreiten,
+//  damit Muffin die Fenstergeometrie unverändert berechnet.
+// =====================================================================
+
+$_light: $variant == 'light';
+
+// --------------------------------------------------------------------- Ampelknöpfe
+$_tl_close:    #FF5F57;
+$_tl_minimize: #FEBC2E;
+$_tl_maximize: #28C840;
+$_tl_idle:     if($_light, #D0D0D2, #4E4E52);   // inaktives Fenster
+$_tl_glyph:    rgba(0, 0, 0, 0.55);
+
+@function _dot($c) {
+  @return radial-gradient(circle closest-side, $c 82%, transparentize($c, 1) 100%);
+}
+
+@mixin _traffic($c) {
+  &, &:hover, &:backdrop:hover { background-image: _dot($c); }
+  &:active, &:checked, &:backdrop:active { background-image: _dot(darken($c, 12%)); }
+  &:backdrop { background-image: _dot($_tl_idle); }
+}
+
+headerbar, .titlebar {
+  button.titlebutton.close,
+  button.titlebutton.minimize,
+  button.titlebutton.maximize {
+    &, &:hover, &:active, &:checked, &:backdrop, &:backdrop:hover {
+      margin: 0;
+      border: none;
+      box-shadow: none;
+      outline: none;
+      background-color: transparent;
+      background-repeat: no-repeat;
+      background-position: center;
+      -gtk-icon-shadow: none;
+      color: transparent;               // Symbol erst beim Überfahren
+      transition: none;
+    }
+    &:hover, &:active, &:backdrop:hover { color: $_tl_glyph; }
+  }
+
+  button.titlebutton.close    { @include _traffic($_tl_close); }
+  button.titlebutton.minimize { @include _traffic($_tl_minimize); }
+  button.titlebutton.maximize { @include _traffic($_tl_maximize); }
+}
+
+// Systemrahmen: Titelleiste schlicht ( Titel mittig, oben 10 px rund)
+.titlebar.default-decoration {
+  min-height: 28px;
+  padding: 2px 8px;
+  box-shadow: none;
+}
+
+.background .titlebar {
+  &, &:backdrop {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+  }
+}
+
+.maximized .titlebar, .tiled .titlebar,
+.tiled-top .titlebar, .tiled-left .titlebar, .tiled-right .titlebar, .tiled-bottom .titlebar,
+.fullscreen .titlebar {
+  &, &:backdrop { border-radius: 0; }
+}
+
+// --------------------------------------------------------------------- Fenster mit eigener Titelleiste (CSD)
+// Hier zeichnet GTK das ganze Fenster selbst – runde Ecken rundum.
+window.csd:not(.maximized):not(.fullscreen):not(.tiled):not(.tiled-top):not(.tiled-left):not(.tiled-right):not(.tiled-bottom):not(.popup) {
+  &, > decoration { border-radius: 10px; }
+}
+
+// Aktiv und inaktiv: gleiche Schattengröße, nur andere Stärke – sonst ändert GTK beim
+// Fokuswechsel den unsichtbaren Schattenrand und das Fenster zittert/springt.
+decoration {
+  .csd & {
+    box-shadow: 0 8px 26px rgba(0, 0, 0, if($_light, 0.30, 0.50)),
+                0 0 0 1px rgba(0, 0, 0, if($_light, 0.14, 0.6));
+  }
+  .csd &:backdrop {
+    box-shadow: 0 8px 26px rgba(0, 0, 0, if($_light, 0.13, 0.30)),
+                0 0 0 1px rgba(0, 0, 0, if($_light, 0.10, 0.5));
+  }
+  .maximized &, .fullscreen & { box-shadow: none; }
+}
+
+// --------------------------------------------------------------------- Bedienelemente
+button.suggested-action {
+  &, &:hover, &:active { color: $selected_fg_color; }
+}
+
+popover.background, .popover {
+  &, > arrow, > contents { border-radius: 10px; }
+}
+
+menu, .menu, .context-menu {
+  padding: 5px 0;
+  menuitem { border-radius: 5px; margin: 0 5px; }
+}
+
+tooltip {
+  &.background { border-radius: 6px; }
+}
+
+scrollbar slider { border-radius: 99px; }
+
+// Seitenleiste im Dateidialog: Auswahl als abgerundete Fläche
+placessidebar.sidebar {
+  row.sidebar-row {
+    border-radius: 6px;
+    margin: 0 6px;
+  }
+}
+
+// =====================================================================
+//  Lesbarkeit – Korrekturen aus dem Altbau (jeweils mit Grund)
+// =====================================================================
+$_sel_soft: if($_light, rgba(0, 0, 0, 0.10), rgba(255, 255, 255, 0.14));
+
+// Seitenleisten (Dateidialog „Speichern/Öffnen“, Einstellungsseiten): Mint-Y markiert die
+// gewählte Zeile hellblau mit weißer Schrift – kaum lesbar. Stattdessen: graue Fläche,
+// normale Schrift.
+placessidebar,
+stacksidebar {
+  row {
+    &:selected, &:selected:hover, &:selected:backdrop {
+      background-color: $_sel_soft;
+      color: $fg_color;
+      label, image { color: $fg_color; }
+    }
+  }
+}
+filechooser placessidebar.sidebar list row.sidebar-row,
+placessidebar.sidebar list row.sidebar-row {
+  &:selected, &:selected:hover, &:selected:backdrop, &.has-open-popup:selected {
+    background-color: $_sel_soft;
+    color: $fg_color;
+    label, image, .sidebar-icon, .sidebar-label { color: $fg_color; }
+    button.sidebar-button, button.sidebar-button.flat {
+      color: $fg_color;
+      &:hover { background-color: $_sel_soft; color: $fg_color; }
+      &:active { background-color: if($_light, rgba(0, 0, 0, 0.18), rgba(255, 255, 255, 0.24)); color: $fg_color; }
+    }
+  }
+  &.sidebar-new-bookmark-row { color: $monterra_accent_text; }
+}
+
+// Akzentfarbe als Schrift (flache Knöpfe, Verweise): lesbare Fassung der Akzentfarbe
+button.suggested-action.flat,
+.primary-toolbar button.suggested-action.flat,
+headerbar button.suggested-action.flat { color: $monterra_accent_text; }
+
+// Standardknopf eines Dialogs (z. B. „Löschen“ in Nemo, „Speichern“): in der Akzentfarbe
+// mit Schrift in $selected_fg_color (weiß, bei Gelb dunkel) – immer lesbar.
+button.default:not(.flat):not(.suggested-action):not(.destructive-action):not(.titlebutton) {
+  &:not(:disabled):not(:backdrop) {
+    color: $selected_fg_color;
+    background-color: $accent_color;
+    background-image: none;
+    border-color: $accent_color;
+    box-shadow: none;
+    label { color: $selected_fg_color; }
+
+    &:hover { background-color: lighten($accent_color, 6%); border-color: lighten($accent_color, 6%); }
+    &:active, &:checked { background-color: darken($accent_color, 8%); border-color: darken($accent_color, 8%); }
+  }
+}
+button.suggested-action:not(:disabled) label { color: $selected_fg_color; }
+
+// Hinweisleisten „Warnung“: das Orange ist zu hell für weiße Schrift → dunkle Schrift.
+infobar.warning {
+  &, &:backdrop {
+    > revealer > box {
+      color: #1D1D1F;
+      label, image { color: #1D1D1F; }
+    }
+    button, button.flat, button:hover, button.flat:hover, button:active {
+      color: #1D1D1F;
+      label, image { color: #1D1D1F; }
+    }
+    button:active, button.flat:active { background-color: rgba(0, 0, 0, 0.15); }
+  }
+}
+
+// =====================================================================
+//  Anmeldebildschirm (Slick Greeter) – nur dort vorhandene Knoten
+// =====================================================================
+#panel_window {
+  background-color: transparent;
+  box-shadow: none;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+
+  menubar, menubar > menuitem {
+    background-color: transparent;
+    color: white;
+    box-shadow: none;
+  }
+  menubar > menuitem {
+    border-radius: 6px;
+    &:hover { background-color: rgba(255, 255, 255, 0.18); }
+  }
+}
+
+window.background.lightdm {
+  entry {
+    padding: 6px 16px;
+    border-radius: 99px;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    background-color: rgba(255, 255, 255, 0.16);
+    color: white;
+    caret-color: white;
+    &:focus { border-color: rgba(255, 255, 255, 0.45); background-color: rgba(255, 255, 255, 0.22); }
+    image { color: rgba(255, 255, 255, 0.85); }
+  }
+  label { text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4); }
+}
+
+// =====================================================================
+// ---------------------------------------------------------------------
+// Lock screen (cinnamon-screensaver up to Cinnamon 6.6):
+// large clock, pill-shaped password field on frosted glass, round buttons.
+// (A theme that styles .csstage replaces the built-in fallback, so every
+//  element of the lock screen is covered here.)
+// ---------------------------------------------------------------------
+$_ls_glass:  transparentize(white, 0.82);
+$_ls_glass2: transparentize(white, 0.74);
+$_ls_line:   transparentize(white, 0.75);
+$_ls_shadow: 0 1px 3px transparentize(black, 0.55);
+
+.csstage {
+  .unlockbox {
+    color: white;
+    font-size: 15px;
+    text-shadow: $_ls_shadow;
+  }
+
+  .clock {
+    color: white;
+    text-shadow: 0 2px 12px transparentize(black, 0.65);
+  }
+
+  .toppanel {
+    border-color: transparent;
+    border-style: none;
+    color: white;
+    background-color: transparent;
+    background-image: none;
+  }
+
+  .audiopanel, .infopanel {
+    border-width: 0;
+    border-radius: 14px;
+    margin: 8px;
+    background-color: $_ls_glass;
+  }
+
+  .notificationwidget, .powerwidget {
+    font-size: 12px;
+    font-weight: bold;
+    color: white;
+    background-color: transparent;
+    background-image: none;
+    text-shadow: $_ls_shadow;
+    padding: 6px;
+  }
+
+  .auth-message {
+    font-size: 14px;
+    color: lighten($error_color, 18%);
+    text-shadow: $_ls_shadow;
+  }
+
+  .caps-message {
+    font-size: 14px;
+    color: #FFD60A;
+    text-shadow: $_ls_shadow;
+  }
+
+  // user picture: round, without frame
+  .framedimage {
+    border-radius: 999px;
+    border: 2px solid $_ls_line;
+    background-color: $_ls_glass;
+    background-clip: border-box;
+    box-shadow: 0 6px 20px transparentize(black, 0.7);
+  }
+
+  .passwordentry {
+    font-size: 14px;
+    min-height: 22px;
+    padding: 5px 16px;
+    border-radius: 99px;
+    border: 1px solid $_ls_line;
+    border-image: none;
+    background-image: none;
+    background-color: $_ls_glass;
+    box-shadow: none;
+    color: white;
+    caret-color: white;
+
+    progress {
+      margin: 2px 12px;
+      padding: 0;
+      border-radius: 0;
+      border-width: 0 0 2px;
+      border-color: transparentize($selected_bg_color, 0.2);
+      background-color: transparent;
+    }
+
+    image { color: transparentize(white, 0.2); }
+    image.left { padding-right: 8px; }
+
+    // keyboard layout (alt text)
+    &:backdrop {
+      font-family: monospace;
+      font-size: 13px;
+      color: white;
+    }
+  }
+
+  .transparentbutton {
+    -gtk-icon-style: requested;
+    min-width: 22px;
+    min-height: 22px;
+    padding: 6px;
+    border-radius: 99px;
+    -gtk-outline-radius: 99px;
+    outline-color: transparent;
+    border: 1px solid $_ls_line;
+    border-image: none;
+    background-image: none;
+    background-color: $_ls_glass;
+    box-shadow: none;
+    color: white;
+
+    image { color: white; }
+    &:disabled image { color: transparentize(white, 0.6); }
+  }
+
+  .passwordentry, .transparentbutton {
+    &:hover { background-color: $_ls_glass2; border-color: $_ls_line; box-shadow: none; }
+    &:focus { background-color: $_ls_glass2; border-color: transparentize(white, 0.45); box-shadow: 0 0 0 3px transparentize($selected_bg_color, 0.55); }
+    &:hover:focus { background-color: transparentize(white, 0.7); border-color: transparentize(white, 0.45); }
+    &:active, &:active:focus { background-color: transparentize(white, 0.62); border-color: transparentize(white, 0.45); }
+  }
+
+  .volumeslider {
+    min-height: 24px;
+    min-width: 100px;
+    background-color: transparentize(white, 0.88);
+    color: $selected_bg_color;
+    padding: 3px 0;
+  }
+
+  scale.volumeslider slider {
+    min-height: 24px;
+    min-width: 4px;
+    margin: -9px;
+  }
+
+  .volumeslider:disabled { background-color: transparentize(white, 0.5); }
+
+  .trackname {
+    font-size: 14px;
+    text-shadow: $_ls_shadow;
+    background-image: none;
+    background-color: transparent;
+  }
+
+  .albumartist {
+    font-size: 11px;
+    text-shadow: $_ls_shadow;
+    background-image: none;
+    background-color: transparent;
+  }
+
+  viewport, GtkViewport {
+    background-color: transparent;
+    background-image: none;
+  }
+
+  .osk-button {
+    -gtk-icon-style: requested;
+    border: 1px solid $_ls_line;
+    border-image: none;
+    box-shadow: none;
+    background-image: none;
+    background-color: $_ls_glass;
+    border-radius: 99px;
+    color: white;
+
+    image { color: white; }
+    &:disabled image { color: transparentize(white, 0.6); }
+    &:hover, &:focus { background-color: $_ls_glass2; }
+    &:active { background-color: transparentize(white, 0.62); }
+  }
+
+  .osk-popover { background-color: transparentize(black, 0.3); }
+}

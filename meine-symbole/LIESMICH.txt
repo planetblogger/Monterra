@@ -1,0 +1,13 @@
+Hier kannst du deine selbst gestalteten Programmsymbole mitnehmen.
+
+1. Auf dem Rechner, auf dem du die Symbole gestaltet hast:
+   Symbolwerkstatt → Datei → „Eigene Programmsymbole exportieren …“
+   (oder: python3 werkzeuge/symbolwerkstatt.py --export meine.monterra-symbole.zip)
+
+2. Die entstandene Datei (*.monterra-symbole.zip) in diesen Ordner legen.
+
+3. Auf dem anderen Rechner wie gewohnt „bash setup.sh“ starten –
+   alle Dateien aus diesem Ordner werden automatisch übernommen.
+
+Nachträglich geht es jederzeit mit:
+   python3 werkzeuge/symbolwerkstatt.py --import meine-symbole/*.zip

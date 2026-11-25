@@ -1,0 +1,27 @@
+/* ======================================================================
+   Monterra für Firefox – userContent.css
+   Neuer Tab / Startseite und Firefox-eigene Seiten (about:…) in Monterra-Farben.
+   Normale Webseiten werden nicht verändert.
+   ====================================================================== */
+
+@-moz-document url("about:home"), url("about:newtab") {
+  :root {
+    color-scheme: light dark;
+    --newtab-background-color: light-dark(#F5F5F7, #1E1E1E) !important;
+    --newtab-background-color-secondary: light-dark(#FFFFFF, #2C2C2E) !important;
+    --background-color-canvas: light-dark(#F5F5F7, #1E1E1E) !important;
+  }
+}
+
+@-moz-document url-prefix("about:") {
+  :root {
+    --color-accent-primary: light-dark(#007AFF, #0A84FF) !important;
+    --color-accent-primary-hover: light-dark(#0068DA, #2E97FF) !important;
+    --color-accent-primary-active: light-dark(#0057B8, #57ABFF) !important;
+    --focus-outline-color: light-dark(#007AFF, #0A84FF) !important;
+    --link-color: light-dark(#007AFF, #0A84FF) !important;
+    --in-content-primary-button-background: light-dark(#007AFF, #0A84FF) !important;
+    --in-content-primary-button-background-hover: light-dark(#0068DA, #2E97FF) !important;
+    --in-content-primary-button-background-active: light-dark(#0057B8, #57ABFF) !important;
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "uuid": "monterra-fenstergroesse@monterra",
+  "name": "Monterra Fenstergröße",
+  "description": "Merkt sich für jedes Programm Größe und Position des Fensters und stellt sie beim nächsten Öffnen wieder her.",
+  "version": "1.0",
+  "cinnamon-version": ["5.8", "6.0", "6.2", "6.4", "6.6", "6.8"],
+  "max-instances": 1,
+  "author": "Monterra"
+}

@@ -1,0 +1,36 @@
+[Icon Theme]
+Name=Monterra
+Comment=Clean icons for Cinnamon – folders, trash and core apps; everything else from Mint-Y
+Inherits=Monterra-Local,Mint-Y,Adwaita,hicolor
+Example=folder
+DisplayDepth=32
+
+Directories=places/scalable,apps/scalable,categories/scalable,symbolic
+
+[places/scalable]
+Context=Places
+Size=64
+MinSize=8
+MaxSize=512
+Type=Scalable
+
+[categories/scalable]
+Context=Categories
+Size=64
+MinSize=8
+MaxSize=512
+Type=Scalable
+
+[apps/scalable]
+Context=Applications
+Size=64
+MinSize=8
+MaxSize=512
+Type=Scalable
+
+[symbolic]
+Context=Status
+Size=16
+MinSize=8
+MaxSize=512
+Type=Scalable

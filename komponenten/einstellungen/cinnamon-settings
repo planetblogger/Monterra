@@ -1,0 +1,87 @@
+#!/usr/bin/python3
+# Monterra – Starter für Cinnamons Systemeinstellungen (liegt in ~/.local/bin)
+#
+# Startet die unveränderten Systemeinstellungen von Cinnamon. Einziger Unterschied: In der
+# Übersicht bekommen alle Gruppen (Erscheinungsbild, Einstellungen, Geräte, …) dieselbe
+# Spaltenbreite, damit die Symbole sauber untereinander stehen. Cinnamon baut jede Gruppe als
+# eigenes Raster, dessen Breite sich sonst nach dem längsten Namen in der Gruppe richtet.
+#
+# Funktioniert mit beiden Arten des Cinnamon-Starters:
+#   Cinnamon ≤ 6.4: /usr/bin/cinnamon-settings ist ein Python-Programm, das per execvp verzweigt
+#   Cinnamon ≥ 6.6: /usr/bin/cinnamon-settings ist ein Shell-Skript („exec …py "$@"“)
+# Geht irgendetwas schief, startet einfach das Original – die Einstellungen öffnen sich immer.
+import os
+import runpy
+import sys
+
+LAUNCHER = "/usr/bin/cinnamon-settings"
+MAIN = "/usr/share/cinnamon/cinnamon-settings/cinnamon-settings.py"
+
+
+def fallback():
+    os.execv(LAUNCHER, [LAUNCHER] + sys.argv[1:])
+
+
+def even_grid():
+    import gi
+    gi.require_version("Gtk", "3.0")
+    from gi.repository import Gtk
+
+    width = [0]
+    set_item_width = Gtk.IconView.set_item_width
+    pack_start = Gtk.CellAreaBox.pack_start
+
+    def caller():
+        return sys._getframe(2).f_code.co_name
+
+    def patched_set_item_width(self, w):
+        width[0] = w if caller() == "prepCategory" else 0
+        return set_item_width(self, w)
+
+    def patched_pack_start(self, renderer, expand=True, align=True, fixed=False):
+        if width[0] and isinstance(renderer, Gtk.CellRendererText) and caller() == "prepCategory":
+            renderer.set_fixed_size(width[0], -1)       # Text = Spaltenbreite → gleiche Raster
+        return pack_start(self, renderer, expand, align, fixed)
+
+    Gtk.IconView.set_item_width = patched_set_item_width
+    Gtk.CellAreaBox.pack_start = patched_pack_start
+
+
+def run_main(args):
+    sys.argv = [MAIN] + list(args)
+    sys.path.insert(0, os.path.dirname(MAIN))
+    runpy.run_path(MAIN, run_name="__main__")
+    sys.exit(0)
+
+
+def launcher_is_python():
+    try:
+        with open(LAUNCHER, "rb") as f:
+            return b"python" in f.readline()
+    except OSError:
+        return False
+
+
+if not os.path.exists(MAIN):
+    fallback()
+
+try:
+    even_grid()
+except Exception:
+    fallback()
+
+if launcher_is_python():
+    # alter Starter: seine Weichen unverändert nutzen, nur den Aufruf der Einstellungen abfangen
+    real_execvp = os.execvp
+
+    def execvp(path, args):
+        if path == MAIN:
+            run_main(args[1:])
+        return real_execvp(path, args)
+
+    os.execvp = execvp
+    sys.argv[0] = LAUNCHER
+    runpy.run_path(LAUNCHER, run_name="__main__")
+else:
+    # neuer Starter (Shell): er ruft nur „cinnamon-settings.py "$@"“ auf – genau das tun wir hier
+    run_main(sys.argv[1:])

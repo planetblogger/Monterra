@@ -1,0 +1,204 @@
+/* ======================================================================
+   Monterra für Thunderbird – userChrome.css
+   Ruhige Oberfläche passend zum Monterra-Theme (hell und dunkel):
+   Grautöne, Seitenleiste, Akzentfarbe.
+
+   - Wirkt nur mit dem Thunderbird-Theme „System-Theme – automatisch“
+     (bei anderen Themes bleibt deren Aussehen unverändert).
+   - Hell/Dunkel folgt automatisch Monterra bzw. Monterra-Dark.
+   - Entfernen: bash werkzeuge/thunderbird.sh --remove
+   ====================================================================== */
+
+/* ---------------------------------------------------------------- Farben */
+:root:not([lwtheme]) {
+  --mt-accent: light-dark(#007AFF, #0A84FF) !important;
+  --mt-accent-fg: #FFFFFF !important;
+  --mt-accent-ring: light-dark(rgba(0, 122, 255, 0.42), rgba(10, 132, 255, 0.5)) !important;
+  --mt-hover: light-dark(rgba(0, 0, 0, 0.065), rgba(255, 255, 255, 0.08)) !important;
+  --mt-pressed: light-dark(rgba(0, 0, 0, 0.12), rgba(255, 255, 255, 0.14)) !important;
+  --mt-hairline: light-dark(rgba(0, 0, 0, 0.13), rgba(255, 255, 255, 0.1)) !important;
+  --mt-header: light-dark(#E8E8E8, #2E2E2E) !important;
+  --mt-sidebar: light-dark(#EBEBEB, #2A2A2A) !important;
+
+  /* Flächen: Inhalt weiß bzw. tiefgrau, Seitenleisten leicht grau */
+  --layout-background-0: light-dark(#FFFFFF, #1E1E1E) !important;
+  --layout-background-1: light-dark(#F5F5F5, #262626) !important;
+  --layout-background-2: light-dark(#ECECEC, #2C2C2C) !important;
+  --layout-background-3: light-dark(#E3E3E3, #363636) !important;
+  --layout-background-4: light-dark(#D6D6D6, #444444) !important;
+  --layout-color-0: light-dark(#000000, #FFFFFF) !important;
+  --layout-color-1: light-dark(#1D1D1F, #E6E6E6) !important;
+  --layout-color-2: light-dark(#6E6E73, #A1A1A6) !important;
+  --layout-color-3: #8E8E93 !important;
+  --layout-border-0: light-dark(#D4D4D4, #141414) !important;
+  --layout-border-1: light-dark(#C8C8C8, #3C3C3C) !important;
+  --layout-border-2: light-dark(#B0B0B0, #505050) !important;
+
+  --color-surface-base-light: #FFFFFF !important;
+  --color-surface-raised-light: #FFFFFF !important;
+  --color-surface-subtle-light: #F0F0F0 !important;
+  --color-surface-lower-light: #F5F5F5 !important;
+  --color-surface-deep-light: #E2E2E4 !important;
+  --color-surface-border-light: #D8D8DA !important;
+  --color-surface-border-intense-light: #AEAEB2 !important;
+  --color-text-base-light: #1D1D1F !important;
+  --color-text-secondary-light: #6E6E73 !important;
+  --color-surface-base-dark: #1E1E1E !important;
+  --color-surface-raised-dark: #2C2C2E !important;
+  --color-surface-subtle-dark: #282828 !important;
+  --color-surface-lower-dark: #232323 !important;
+  --color-surface-deep-dark: #3A3A3C !important;
+  --color-surface-border-dark: #3A3A3C !important;
+  --color-surface-border-intense-dark: #636366 !important;
+  --color-text-base-dark: #E6E6E6 !important;
+  --color-text-secondary-dark: #A1A1A6 !important;
+
+  /* Akzentfarbe (Auswahl, Hauptknöpfe, Fokus) */
+  --selected-item-color: var(--mt-accent) !important;
+  --selected-item-text-color: var(--mt-accent-fg) !important;
+  --color-primary-default: var(--mt-accent) !important;
+  --color-primary-hover: color-mix(in srgb, var(--mt-accent) 88%, black) !important;
+  --color-primary-pressed: color-mix(in srgb, var(--mt-accent) 76%, black) !important;
+  --color-text-base-inverted: var(--mt-accent-fg) !important;
+  --focus-outline-color: var(--mt-accent) !important;
+  --toolbar-field-focus-border-color: var(--mt-accent) !important;
+  --new-folder-color: var(--mt-accent) !important;
+  --folderpane-unread-new-count-background: var(--mt-accent) !important;
+  --link-color: var(--mt-accent) !important;
+  --button-link-text-color: var(--mt-accent) !important;
+
+  /* Fensterkopf: Tableiste und Symbolleiste als eine Fläche */
+  --tabs-toolbar-background-color: var(--mt-header) !important;
+  --tabs-toolbar-box-shadow: none !important;
+  --toolbar-background-color: var(--mt-header) !important;
+  --chrome-content-separator-color: light-dark(#CDCDCD, #161616) !important;
+  --tabline-color: transparent !important;
+
+  /* Seitenleisten */
+  --sidebar-background-color: var(--mt-sidebar) !important;
+  --spaces-bg-color: var(--mt-sidebar) !important;
+  --spaces-bg-image: none !important;
+
+  /* Knöpfe, Felder, Menüs */
+  --button-border-radius: 6px !important;
+  --input-text-border-radius: 6px !important;
+  --listbox-border-radius: 6px !important;
+  --toolbar-button-hover-background-color: var(--mt-hover) !important;
+  --toolbar-button-hover-border-color: transparent !important;
+  --toolbar-button-active-background-color: var(--mt-pressed) !important;
+  --toolbar-button-active-border-color: transparent !important;
+  --toolbarbutton-background-color-hover: var(--mt-hover) !important;
+  --toolbarbutton-hover-bordercolor: transparent !important;
+  --toolbarbutton-background-color-active: var(--mt-pressed) !important;
+  --toolbarbutton-active-bordercolor: transparent !important;
+  --toolbarbutton-checked-background: var(--mt-pressed) !important;
+  --search-bar-border-color: transparent !important;
+  --search-bar-background: light-dark(rgba(0, 0, 0, 0.055), rgba(255, 255, 255, 0.075)) !important;
+  --search-bar-focus-background: light-dark(#FFFFFF, #1E1E1E) !important;
+  --panel-background-color: light-dark(#F7F7F7, #2C2C2E) !important;
+  --panel-text-color: light-dark(#1D1D1F, #F2F2F2) !important;
+  --panel-border-color: light-dark(rgba(0, 0, 0, 0.14), rgba(255, 255, 255, 0.12)) !important;
+  --panel-border-radius: 10px !important;
+  --panel-separator-color: var(--mt-hairline) !important;
+  --toolbarseparator-color: var(--mt-hairline) !important;
+  --autocomplete-item-radius: 5px !important;
+}
+
+/* Popup-Menüs übernehmen sonst ihre eigenen Werte */
+:root:not([lwtheme]) :is(menupopup, panel):not(.autoscroller) {
+  --panel-background-color: light-dark(#F7F7F7, #2C2C2E) !important;
+  --panel-border-color: light-dark(rgba(0, 0, 0, 0.14), rgba(255, 255, 255, 0.12)) !important;
+  --panel-border-radius: 10px !important;
+}
+
+/* ---------------------------------------------------------------- Fensterkopf */
+:root:not([lwtheme]) #tabs-toolbar {
+  background-image: none !important;
+  background-color: var(--mt-header) !important;
+  box-shadow: none !important;
+}
+:root:not([lwtheme]) unified-toolbar {
+  background-color: var(--mt-header) !important;
+  border-block-end-color: var(--chrome-content-separator-color) !important;
+}
+:root:not([lwtheme]) #unifiedToolbarContent .search-bar {
+  --search-outline-offset: 0;
+}
+
+/* ---------------------------------------------------------------- Tabs als Kapseln */
+:root:not([lwtheme]) .tabmail-tab {
+  border-radius: 7px !important;
+  margin-block: 2px 4px !important;
+}
+:root:not([lwtheme]) .tabmail-tab .tab-background {
+  border-radius: 7px !important;
+}
+:root:not([lwtheme]) .tabmail-tab .tab-background[selected] {
+  background-color: light-dark(rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.1)) !important;
+  box-shadow: light-dark(0 0.5px 1.5px rgba(0, 0, 0, 0.16), 0 0 0 0.5px rgba(0, 0, 0, 0.35)) !important;
+}
+:root:not([lwtheme]) .tabmail-tab:hover .tab-background:not([selected]) {
+  background-color: light-dark(rgba(0, 0, 0, 0.045), rgba(255, 255, 255, 0.05)) !important;
+}
+:root:not([lwtheme]) .tabmail-tab .tab-line {
+  display: none !important;
+}
+:root:not([lwtheme]) button.tab-close-button {
+  border-radius: 5px !important;
+}
+
+/* ---------------------------------------------------------------- Ordnerliste und Nachrichtenliste
+   Auswahl als abgerundete Fläche */
+:root:not([lwtheme]) #folderTree li > .container,
+:root:not([lwtheme]) [is="tree-view-table-body"] > .card-layout {
+  border-radius: 6px !important;
+}
+:root:not([lwtheme]) #folderPane {
+  background-color: var(--mt-sidebar) !important;
+}
+
+/* ---------------------------------------------------------------- Ampel-Knöpfe
+   Thunderbird zeichnet seine Fensterknöpfe selbst; hier bekommen sie die Monterra-
+   Ampelfarben. Reihenfolge und Seite (links) übernimmt Thunderbird aus den
+   Cinnamon-Einstellungen. Die Symbole erscheinen beim Überfahren. */
+:root:not([lwtheme]) .titlebar-buttonbox {
+  --titlebar-button-size: 14px !important;
+  --titlebar-button-spacing: 4px !important;
+  --titlebar-button-end-spacing: 12px !important;
+  padding-inline-start: 8px !important;
+}
+:root:not([lwtheme]) .titlebar-button > .toolbarbutton-icon {
+  background-color: transparent !important;
+  background-size: 14px 14px !important;
+  border-radius: 0 !important;
+  outline: none !important;
+  transition: none !important;
+}
+:root:not([lwtheme]) .titlebar-close > .toolbarbutton-icon   { background-image: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2214%22 height=%2214%22 viewBox=%220 0 14 14%22%3E%3Ccircle cx=%227%22 cy=%227%22 r=%226.25%22 fill=%22%23FF5F57%22 stroke=%22%23E2463F%22 stroke-width=%220.5%22/%3E%3C/svg%3E") !important; }
+:root:not([lwtheme]) .titlebar-min > .toolbarbutton-icon     { background-image: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2214%22 height=%2214%22 viewBox=%220 0 14 14%22%3E%3Ccircle cx=%227%22 cy=%227%22 r=%226.25%22 fill=%22%23FEBC2E%22 stroke=%22%23E1A116%22 stroke-width=%220.5%22/%3E%3C/svg%3E") !important; }
+:root:not([lwtheme]) :is(.titlebar-max, .titlebar-restore) > .toolbarbutton-icon { background-image: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2214%22 height=%2214%22 viewBox=%220 0 14 14%22%3E%3Ccircle cx=%227%22 cy=%227%22 r=%226.25%22 fill=%22%2328C840%22 stroke=%22%2314AE2C%22 stroke-width=%220.5%22/%3E%3C/svg%3E") !important; }
+
+:root:not([lwtheme]) .titlebar-buttonbox:hover .titlebar-close > .toolbarbutton-icon   { background-image: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2214%22 height=%2214%22 viewBox=%220 0 14 14%22%3E%3Ccircle cx=%227%22 cy=%227%22 r=%226.25%22 fill=%22%23FF5F57%22 stroke=%22%23E2463F%22 stroke-width=%220.5%22/%3E%3Cpath d=%22M4.6 4.6 L9.4 9.4 M9.4 4.6 L4.6 9.4%22 stroke=%22%234D0000%22 stroke-width=%221.15%22 stroke-linecap=%22round%22 fill=%22none%22 opacity=%220.85%22/%3E%3C/svg%3E") !important; }
+:root:not([lwtheme]) .titlebar-buttonbox:hover .titlebar-min > .toolbarbutton-icon     { background-image: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2214%22 height=%2214%22 viewBox=%220 0 14 14%22%3E%3Ccircle cx=%227%22 cy=%227%22 r=%226.25%22 fill=%22%23FEBC2E%22 stroke=%22%23E1A116%22 stroke-width=%220.5%22/%3E%3Cpath d=%22M3.9 7 H10.1%22 stroke=%22%23985712%22 stroke-width=%221.25%22 stroke-linecap=%22round%22 fill=%22none%22 opacity=%220.85%22/%3E%3C/svg%3E") !important; }
+:root:not([lwtheme]) .titlebar-buttonbox:hover .titlebar-max > .toolbarbutton-icon     { background-image: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2214%22 height=%2214%22 viewBox=%220 0 14 14%22%3E%3Ccircle cx=%227%22 cy=%227%22 r=%226.25%22 fill=%22%2328C840%22 stroke=%22%2314AE2C%22 stroke-width=%220.5%22/%3E%3Cg fill=%22%230B650D%22 opacity=%220.85%22%3E%3Cpath d=%22M4.3 4.3 H8.3 L4.3 8.3 Z%22/%3E%3Cpath d=%22M9.7 9.7 H5.7 L9.7 5.7 Z%22/%3E%3C/g%3E%3C/svg%3E") !important; }
+:root:not([lwtheme]) .titlebar-buttonbox:hover .titlebar-restore > .toolbarbutton-icon { background-image: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2214%22 height=%2214%22 viewBox=%220 0 14 14%22%3E%3Ccircle cx=%227%22 cy=%227%22 r=%226.25%22 fill=%22%2328C840%22 stroke=%22%2314AE2C%22 stroke-width=%220.5%22/%3E%3Cg fill=%22%230B650D%22 opacity=%220.85%22%3E%3Cpath d=%22M6.6 6.6 V3.0 L3.0 6.6 Z%22/%3E%3Cpath d=%22M7.4 7.4 V11.0 L11.0 7.4 Z%22/%3E%3C/g%3E%3C/svg%3E") !important; }
+
+:root:not([lwtheme]) .titlebar-close:hover:active > .toolbarbutton-icon   { background-image: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2214%22 height=%2214%22 viewBox=%220 0 14 14%22%3E%3Ccircle cx=%227%22 cy=%227%22 r=%226.25%22 fill=%22%23D14D47%22 stroke=%22%23B93933%22 stroke-width=%220.5%22/%3E%3Cpath d=%22M4.6 4.6 L9.4 9.4 M9.4 4.6 L4.6 9.4%22 stroke=%22%234D0000%22 stroke-width=%221.15%22 stroke-linecap=%22round%22 fill=%22none%22 opacity=%220.85%22/%3E%3C/svg%3E") !important; }
+:root:not([lwtheme]) .titlebar-min:hover:active > .toolbarbutton-icon     { background-image: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2214%22 height=%2214%22 viewBox=%220 0 14 14%22%3E%3Ccircle cx=%227%22 cy=%227%22 r=%226.25%22 fill=%22%23D09A25%22 stroke=%22%23B88412%22 stroke-width=%220.5%22/%3E%3Cpath d=%22M3.9 7 H10.1%22 stroke=%22%23985712%22 stroke-width=%221.25%22 stroke-linecap=%22round%22 fill=%22none%22 opacity=%220.85%22/%3E%3C/svg%3E") !important; }
+:root:not([lwtheme]) .titlebar-max:hover:active > .toolbarbutton-icon     { background-image: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2214%22 height=%2214%22 viewBox=%220 0 14 14%22%3E%3Ccircle cx=%227%22 cy=%227%22 r=%226.25%22 fill=%22%2320A434%22 stroke=%22%23108E24%22 stroke-width=%220.5%22/%3E%3Cg fill=%22%230B650D%22 opacity=%220.85%22%3E%3Cpath d=%22M4.3 4.3 H8.3 L4.3 8.3 Z%22/%3E%3Cpath d=%22M9.7 9.7 H5.7 L9.7 5.7 Z%22/%3E%3C/g%3E%3C/svg%3E") !important; }
+:root:not([lwtheme]) .titlebar-restore:hover:active > .toolbarbutton-icon { background-image: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2214%22 height=%2214%22 viewBox=%220 0 14 14%22%3E%3Ccircle cx=%227%22 cy=%227%22 r=%226.25%22 fill=%22%2320A434%22 stroke=%22%23108E24%22 stroke-width=%220.5%22/%3E%3Cg fill=%22%230B650D%22 opacity=%220.85%22%3E%3Cpath d=%22M6.6 6.6 V3.0 L3.0 6.6 Z%22/%3E%3Cpath d=%22M7.4 7.4 V11.0 L11.0 7.4 Z%22/%3E%3C/g%3E%3C/svg%3E") !important; }
+
+/* inaktives Fenster: graue Knöpfe */
+:root:not([lwtheme]):-moz-window-inactive .titlebar-buttonbox:not(:hover) .titlebar-button > .toolbarbutton-icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2214%22 height=%2214%22 viewBox=%220 0 14 14%22%3E%3Ccircle cx=%227%22 cy=%227%22 r=%226.25%22 fill=%22%23D6D6D6%22 stroke=%22%23C4C4C4%22 stroke-width=%220.5%22/%3E%3C/svg%3E") !important;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([lwtheme]):-moz-window-inactive .titlebar-buttonbox:not(:hover) .titlebar-button > .toolbarbutton-icon {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2214%22 height=%2214%22 viewBox=%220 0 14 14%22%3E%3Ccircle cx=%227%22 cy=%227%22 r=%226.25%22 fill=%22%234D4D4F%22 stroke=%22%233E3E40%22 stroke-width=%220.5%22/%3E%3C/svg%3E") !important;
+  }
+}
+
+/* ---------------------------------------------------------------- Menüs */
+:root:not([lwtheme]) menupopup {
+  --menuitem-border-radius: 5px !important;
+}

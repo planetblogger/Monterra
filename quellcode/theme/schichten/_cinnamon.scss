@@ -1,0 +1,164 @@
+// =====================================================================
+//  Monterra – Schicht für die Cinnamon-Oberfläche (wird nach Mint-Y geladen)
+//  Nur Farben, Radien und Abstände; keine Größen von Leisten oder Symbolen,
+//  damit Cinnamon alle Maße selbst bestimmt.
+// =====================================================================
+
+$_light: $variant == 'light';
+
+$_bar_bg:     if($_light, rgba(246, 246, 246, 0.85), rgba(30, 30, 32, 0.82));
+$_popup_bg:   if($_light, rgba(244, 244, 244, 0.98), rgba(40, 40, 42, 0.98));
+$_line:       if($_light, rgba(0, 0, 0, 0.12), rgba(255, 255, 255, 0.12));
+$_hover:      if($_light, rgba(0, 0, 0, 0.08), rgba(255, 255, 255, 0.12));
+$_shadow:     rgba(0, 0, 0, 0.28);
+
+// --------------------------------------------------------------------- Leisten
+.panel-top, .panel-bottom, .panel-left, .panel-right {
+  background-color: $_bar_bg;
+  box-shadow: none;
+}
+.panel-top    { border-bottom: 1px solid $_line; }
+.panel-bottom { border-top: 1px solid $_line; }
+.panel-left   { border-right: 1px solid $_line; }
+.panel-right  { border-left: 1px solid $_line; }
+
+.applet-box {
+  border-radius: 6px;
+  &:hover, &:checked { background-color: $_hover; }
+}
+
+.grouped-window-list-item-box {
+  border-radius: 8px;
+  &:hover, &:focus, &:active, &:checked { background-color: $_hover; }
+}
+
+// --------------------------------------------------------------------- Menüs
+.menu {
+  background-color: $_popup_bg;
+  border: 1px solid $_line;
+  box-shadow: 0 6px 20px $_shadow;
+  border-radius: 10px;
+}
+
+.popup-menu-item {
+  border-radius: 5px;
+  &:active {
+    color: $selected_fg_color;
+    background-color: $accent_color;
+    .popup-menu-icon, StLabel { color: $selected_fg_color; }
+  }
+}
+
+// Feste Symbolgrößen wie im Cinnamon-Standardtheme. Mint-Y legt sie nicht fest; ohne
+// diese Angaben fällt St beim Überfahren auf 48 px zurück und die Menüpunkte werden riesig.
+.popup-menu-icon,
+.popup-menu-item:active .popup-menu-icon,
+.popup-menu-item:hover .popup-menu-icon { icon-size: 1.14em; }
+.popup-menu-arrow,
+.popup-menu-item:active .popup-menu-arrow { icon-size: 1.14em; }
+.sound-player StButton StIcon { icon-size: 1.5em; }
+.sound-player StButton:small StIcon { icon-size: 1.2em; }
+.sound-player-overlay StButton > StIcon { icon-size: 16px; }
+
+.menu-application-button-selected,
+.menu-category-button-selected,
+.menu-category-button:hover,
+.menu-favorites-button:hover,
+.menu-places-button:hover {
+  border-radius: 6px;
+}
+
+#Tooltip {
+  border: 1px solid $_line;
+  border-radius: 6px;
+}
+
+// --------------------------------------------------------------------- Mitteilungen (Karten oben rechts)
+$_card_bg: if($_light, rgba(246, 246, 246, 0.96), rgba(44, 44, 46, 0.96));
+
+#notification {
+  background-color: $_card_bg;
+  border: 1px solid $_line;
+  border-radius: 16px;
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.25);
+  color: $fg_color;
+
+  .popup-menu & {
+    box-shadow: none;
+    background-color: $_hover;
+    border-radius: 12px;
+  }
+}
+
+.notification-button, .notification-icon-button {
+  border-radius: 8px;
+}
+
+// --------------------------------------------------------------------- Fensterwechsler (Alt+Tab)
+.switcher-list {
+  background-color: if($_light, rgba(240, 240, 240, 0.94), rgba(30, 30, 32, 0.92));
+  border: 1px solid $_line;
+  border-radius: 22px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.30);
+
+  .item-box {
+    border-radius: 14px;
+    &:outlined { background-color: $_hover; }
+    &:selected { background-color: if($_light, rgba(0, 0, 0, 0.11), rgba(255, 255, 255, 0.15)); }
+  }
+}
+
+// --------------------------------------------------------------------- Sonstiges
+.media-keys-osd, .info-osd, .workspace-switch-osd { border-radius: 16px; }
+.dialog, .modal-dialog { border-radius: 14px; }
+.calendar-today { border-radius: 99px; }
+
+// ---------------------------------------------------------------------
+// Lock screen (Cinnamon 6.8 and later)
+// ---------------------------------------------------------------------
+.screen-shield {
+  .icon-button {
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    background-color: rgba(255, 255, 255, 0.18);
+    &:hover, &:focus { background-color: rgba(255, 255, 255, 0.26); }
+    &:active { background-color: rgba(255, 255, 255, 0.34); }
+  }
+
+  .prompt-dialog {
+    .user-widget-label {
+      font-weight: 600;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    }
+
+    .user-icon {
+      border-radius: 9999px;
+      border: 2px solid rgba(255, 255, 255, 0.25);
+    }
+
+    &-password-entry {
+      border-radius: 9999px;
+      padding: 8px 18px;
+      background-color: rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      &:focus { border-color: rgba(255, 255, 255, 0.55); }
+    }
+
+    &-error-label { border-radius: 12px; }
+  }
+
+  .clock-widget {
+    .clock-time-label {
+      font-weight: 600;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+    }
+    .clock-date-label {
+      font-weight: 500;
+      text-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
+    }
+  }
+
+  .albumart-widget {
+    border-radius: 18px;
+    background-color: rgba(255, 255, 255, 0.16);
+  }
+}

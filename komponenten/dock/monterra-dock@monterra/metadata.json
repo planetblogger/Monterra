@@ -1,0 +1,16 @@
+{
+  "uuid": "monterra-dock@monterra",
+  "name": "Monterra Dock",
+  "description": "Schlankes, elegantes Dock: angeheftete und laufende Programme, flüssige Vergrößerung, Sortieren per Drag-and-Drop, frei platzierbare Trenner, Papierkorb, automatisches Ausblenden.",
+  "version": "1.3",
+  "cinnamon-version": [
+    "5.8",
+    "6.0",
+    "6.2",
+    "6.4",
+    "6.6",
+    "6.8"
+  ],
+  "max-instances": 1,
+  "author": "Monterra"
+}

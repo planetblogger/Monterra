@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF6B5E"/><stop offset="1" stop-color="#E0352B"/></linearGradient>
+  <filter id="sh" x="-20%" y="-20%" width="140%" height="150%">
+    <feDropShadow dx="0" dy="1.2" stdDeviation="1.3" flood-color="#000" flood-opacity="0.3"/></filter>
+</defs>
+<path filter="url(#sh)" d="M32 5 C50.5 5 59 6.8 59 32 C59 57.2 50.5 59 32 59 C13.5 59 5 57.2 5 32 C5 6.8 13.5 5 32 5 Z" fill="url(#g)" stroke="none" stroke-width=".6"/>
+<path d="M20 14 H36 L44 22 V48 C44 49.1 43.1 50 42 50 H20 C18.9 50 18 49.1 18 48 V16 C18 14.9 18.9 14 20 14 Z" fill="#FFFFFF"/><path d="M36 14 V20 C36 21.1 36.9 22 38 22 H44 Z" fill="#FFC9C4"/><g fill="#E0352B" opacity=".55"><rect x="22" y="28" width="18" height="2" rx="1"/><rect x="22" y="33" width="18" height="2" rx="1"/><rect x="22" y="38" width="12" height="2" rx="1"/></g>
+</svg>

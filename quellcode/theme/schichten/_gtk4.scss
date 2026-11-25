@@ -1,0 +1,80 @@
+// =====================================================================
+//  Monterra – Schicht für GTK 4 (wird nach Mint-Y geladen)
+// =====================================================================
+
+$_light: $variant == 'light';
+
+$_tl_close:    #FF5F57;
+$_tl_minimize: #FEBC2E;
+$_tl_maximize: #28C840;
+$_tl_idle:     if($_light, #D0D0D2, #4E4E52);
+$_tl_glyph:    rgba(0, 0, 0, 0.55);
+
+@function _dot($c) {
+  @return radial-gradient(circle closest-side, $c 82%, transparentize($c, 1) 100%);
+}
+
+@mixin _traffic($c) {
+  &, &:hover { background-image: _dot($c); }
+  &:active, &:checked { background-image: _dot(darken($c, 12%)); }
+  &:backdrop { background-image: _dot($_tl_idle); }
+  &:backdrop:hover { background-image: _dot($c); }
+}
+
+windowcontrols {
+  border-spacing: 0;
+
+  > button.close,
+  > button.minimize,
+  > button.maximize {
+    &, &:hover, &:active, &:checked, &:backdrop, &:backdrop:hover {
+      margin: 0;
+      border: none;
+      box-shadow: none;
+      outline: none;
+      background-color: transparent;
+      background-repeat: no-repeat;
+      background-position: center;
+      color: transparent;
+      transition: none;
+    }
+    &:hover, &:active, &:backdrop:hover { color: $_tl_glyph; }
+  }
+
+  > button.close    { @include _traffic($_tl_close); }
+  > button.minimize { @include _traffic($_tl_minimize); }
+  > button.maximize { @include _traffic($_tl_maximize); }
+}
+
+// Fenster: rundum 10 px rund, weicher Schatten
+window.csd {
+  border-radius: 10px;
+  box-shadow: 0 8px 26px rgba(0, 0, 0, if($_light, 0.30, 0.50)),
+              0 0 0 1px rgba(0, 0, 0, if($_light, 0.14, 0.6));
+
+  &:backdrop {
+    box-shadow: 0 8px 26px rgba(0, 0, 0, if($_light, 0.13, 0.30)),
+                0 0 0 1px rgba(0, 0, 0, if($_light, 0.10, 0.5));
+  }
+
+  &.dialog.message { border-radius: 10px; }
+
+  &.maximized, &.fullscreen, &.tiled, &.tiled-top, &.tiled-left, &.tiled-right, &.tiled-bottom {
+    border-radius: 0;
+  }
+  &.maximized, &.fullscreen { box-shadow: none; }
+}
+
+window.csd > .titlebar, window.csd > headerbar {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+window.maximized > .titlebar, window.maximized > headerbar,
+window.fullscreen > .titlebar, window.fullscreen > headerbar,
+window.tiled > .titlebar, window.tiled > headerbar {
+  border-radius: 0;
+}
+
+popover > contents { border-radius: 10px; }
+tooltip.background { border-radius: 6px; }

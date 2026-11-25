@@ -1,0 +1,69 @@
+{
+  "styles": [
+    {
+      "name": "Monterra",
+      "icon-themes": [
+        {
+          "name": "Red",
+          "color": "#FF6B63",
+          "theme": "Monterra-Red"
+        },
+        {
+          "name": "Orange",
+          "color": "#FFA53A",
+          "theme": "Monterra-Orange"
+        },
+        {
+          "name": "Yellow",
+          "color": "#FFD23F",
+          "theme": "Monterra-Yellow"
+        },
+        {
+          "name": "Green",
+          "color": "#4CD372",
+          "theme": "Monterra-Green"
+        },
+        {
+          "name": "Teal",
+          "color": "#2FD3C9",
+          "theme": "Monterra-Mint"
+        },
+        {
+          "name": "Cyan",
+          "color": "#3BBFD6",
+          "theme": "Monterra-Cyan"
+        },
+        {
+          "name": "Blue",
+          "color": "#64B9F5",
+          "theme": "Monterra"
+        },
+        {
+          "name": "Navy",
+          "color": "#6B7BEF",
+          "theme": "Monterra-Indigo"
+        },
+        {
+          "name": "Purple",
+          "color": "#C27BEA",
+          "theme": "Monterra-Purple"
+        },
+        {
+          "name": "Pink",
+          "color": "#FF7EB0",
+          "theme": "Monterra-Pink"
+        },
+        {
+          "name": "Brown",
+          "color": "#BC9B72",
+          "theme": "Monterra-Brown"
+        },
+        {
+          "name": "Grey",
+          "color": "#A4A5AB",
+          "theme": "Monterra-Graphite"
+        }
+      ]
+    }
+  ]
+}

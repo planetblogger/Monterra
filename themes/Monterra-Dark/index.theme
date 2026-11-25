@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=X-GNOME-Metatheme
+Name=Monterra-Dark
+Comment=Elegantes Theme für Cinnamon (auf Basis von Mint-Y)
+Encoding=UTF-8
+
+[X-GNOME-Metatheme]
+GtkTheme=Monterra-Dark
+MetacityTheme=Monterra-Dark
+IconTheme=Monterra
+CursorTheme=Monterra-Cursor
+ButtonLayout=close,minimize,maximize:

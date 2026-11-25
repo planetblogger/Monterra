@@ -1,0 +1,76 @@
+{
+  "head-look": {
+    "type": "header",
+    "description": "Darstellung"
+  },
+  "icon-size": {
+    "type": "spinbutton",
+    "default": 48,
+    "min": 24,
+    "max": 96,
+    "step": 2,
+    "units": "px",
+    "description": "Symbolgröße"
+  },
+  "magnify": {
+    "type": "switch",
+    "default": true,
+    "description": "Symbole beim Überfahren vergrößern"
+  },
+  "magnify-size": {
+    "type": "spinbutton",
+    "default": 76,
+    "min": 32,
+    "max": 128,
+    "step": 2,
+    "units": "px",
+    "description": "Größe bei Vergrößerung",
+    "dependency": "magnify"
+  },
+  "style": {
+    "type": "combobox",
+    "default": "auto",
+    "description": "Stil",
+    "options": {
+      "Automatisch (nach Cinnamon-Theme)": "auto",
+      "Hell": "light",
+      "Dunkel": "dark"
+    }
+  },
+  "head-behaviour": {
+    "type": "header",
+    "description": "Verhalten"
+  },
+  "autohide": {
+    "type": "switch",
+    "default": false,
+    "description": "Automatisch ausblenden, sobald ein Fenster das Dock überdeckt"
+  },
+  "click-minimize": {
+    "type": "switch",
+    "default": true,
+    "description": "Klick auf das aktive Programm minimiert es"
+  },
+  "show-running": {
+    "type": "switch",
+    "default": true,
+    "description": "Laufende, nicht angeheftete Programme anzeigen"
+  },
+  "show-trash": {
+    "type": "switch",
+    "default": true,
+    "description": "Papierkorb anzeigen"
+  },
+  "head-separators": {
+    "type": "header",
+    "description": "Trenner"
+  },
+  "separators-help": {
+    "type": "label",
+    "description": "Trenner zwischen angehefteten Programmen: Rechtsklick auf ein Programm → „Trenner links/rechts einfügen“. Verschieben per Drag-and-Drop, entfernen per Rechtsklick auf den Trenner."
+  },
+  "separators": {
+    "type": "generic",
+    "default": []
+  }
+}

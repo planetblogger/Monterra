@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=Monterra
+Description=Clean boot splash for Linux Mint (Monterra theme)
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/monterra
+ScriptFile=/usr/share/plymouth/themes/monterra/monterra.script
