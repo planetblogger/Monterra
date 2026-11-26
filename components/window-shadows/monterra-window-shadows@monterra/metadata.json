@@ -1,0 +1,16 @@
+{
+  "uuid": "monterra-window-shadows@monterra",
+  "name": "Monterra Window Shadows",
+  "description": "Soft, large shadows for windows with a system title bar – matching the shadows of the Monterra theme. The active window stands out clearly.",
+  "version": "1.5",
+  "cinnamon-version": [
+    "5.8",
+    "6.0",
+    "6.2",
+    "6.4",
+    "6.6",
+    "6.8"
+  ],
+  "max-instances": 1,
+  "author": "Monterra"
+}

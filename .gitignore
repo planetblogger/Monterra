@@ -3,5 +3,5 @@ __pycache__/
 *.zip
 /dist/
 /work/
-quellcode/theme/dist/
-quellcode/theme/work/
+source/theme/dist/
+source/theme/work/

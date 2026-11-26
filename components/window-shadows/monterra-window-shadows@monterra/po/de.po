@@ -1,0 +1,12 @@
+msgid ""
+msgstr ""
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Monterra Window Shadows"
+msgstr "Monterra Fensterschatten"
+
+msgid "Soft, large shadows for windows with a system title bar – matching the shadows of the Monterra theme. The active window stands out clearly."
+msgstr "Weiche, große Fensterschatten für Fenster mit Systemrahmen – passend zu den Schatten des Monterra-Themes. Das aktive Fenster hebt sich deutlich ab."

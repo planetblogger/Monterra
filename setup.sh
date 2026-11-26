@@ -10,7 +10,7 @@
 #  Bitte im entpackten Monterra-Ordner aus einem Terminal starten
 #  (für Boot-Splash, Anmeldebildschirm usw. wird einmal das Passwort abgefragt).
 #  Protokoll / log: ~/monterra-installer.log
-#  Texte: werkzeuge/sprachen/de.sh, en.sh, es.sh
+#  Texte: tools/languages/de.sh, en.sh, es.sh
 # =====================================================================
 HERE="$(cd "$(dirname "$0")" && pwd)"
 LOG="$HOME/monterra-installer.log"
@@ -35,7 +35,7 @@ if [ ! -t 0 ] && [ -z "$MONTERRA_IN_TERM" ] && { [ -n "$DISPLAY" ] || [ -n "$WAY
 fi
 
 # ------------------------------------------------------------------ Sprache / language / idioma
-if [ ! -f "$HERE/werkzeuge/sprachen/de.sh" ]; then
+if [ ! -f "$HERE/tools/languages/de.sh" ]; then
   echo "Bitte im entpackten Monterra-Ordner starten. / Please start inside the unpacked Monterra folder."
   exit 1
 fi
@@ -58,8 +58,8 @@ if [ -z "$LANG_SEL" ]; then
   fi
 fi
 case "$LANG_SEL" in de|en|es) ;; *) LANG_SEL=$LANG_DEF ;; esac
-# shellcheck source=werkzeuge/sprachen/de.sh
-. "$HERE/werkzeuge/sprachen/$LANG_SEL.sh"
+# shellcheck source=tools/languages/de.sh
+. "$HERE/tools/languages/$LANG_SEL.sh"
 TITLE="$S_TITLE"
 # gewählte Sprache merken (z. B. für die Symbolwerkstatt)
 mkdir -p "$HOME/.config" && echo "$LANG_SEL" > "$HOME/.config/monterra-sprache.conf"
@@ -69,7 +69,7 @@ mkdir -p "$HOME/.config" && echo "$LANG_SEL" > "$HOME/.config/monterra-sprache.c
 if [ "$(id -u)" -eq 0 ]; then
   echo -e "$S_NO_SUDO"; exit 1
 fi
-if [ ! -f "$HERE/werkzeuge/setup.sh" ] || [ ! -d "$HERE/themes/Monterra" ]; then
+if [ ! -f "$HERE/tools/setup.sh" ] || [ ! -d "$HERE/themes/Monterra" ]; then
   echo "$S_WRONG_DIR"; exit 1
 fi
 
@@ -130,7 +130,7 @@ fi
 # pick KEY-DEFAULT "Frage" SPALTEN key1 bild1 "Text 1" …   -> gewählter key
 pick() {
   local def="$1" question="$2" cols="$3"; shift 3
-  python3 "$HERE/werkzeuge/bildauswahl.py" --title "$TITLE" --text "$question" --ok "$S_NEXT" --cancel "$S_CANCEL" \
+  python3 "$HERE/tools/image_picker.py" --title "$TITLE" --text "$question" --ok "$S_NEXT" --cancel "$S_CANCEL" \
     --default "$def" --columns "$cols" "$@" 2>/dev/null
 }
 
@@ -218,8 +218,8 @@ failed_report() {
   info "$(printf "$S_DONE_FAILED" "$list" "$LOG")"
 }
 
-. "$HERE/werkzeuge/motive.sh"
-MOTIF_KEYS=(himmel wueste mars dschungel seide bluete)
+. "$HERE/tools/motifs.sh"
+MOTIF_KEYS=(sky desert mars jungle silk blossom)
 motif_name() {   # key -> Anzeigename
   local i
   for i in "${!MOTIF_KEYS[@]}"; do
@@ -228,7 +228,7 @@ motif_name() {   # key -> Anzeigename
   echo "$1"
 }
 # Farbschlüssel (wie in den Dateinamen) und Anzeigenamen der gewählten Sprache
-COLOR_KEYS=(blau indigo lila pink rot orange gelb gruen petrol cyan braun grau graphit)
+COLOR_KEYS=(blue indigo purple pink red orange yellow green teal cyan brown grey graphite)
 color_name() {   # key -> Anzeigename
   local i
   for i in "${!COLOR_KEYS[@]}"; do
@@ -240,7 +240,7 @@ color_args() {   # key "Name" key "Name" …  (Gelb mit Hinweis auf dunkle Schri
   local i n
   for i in "${!COLOR_KEYS[@]}"; do
     n="${S_COLORS[$i]}"
-    [ "$1" = accent ] && [ "${COLOR_KEYS[$i]}" = gelb ] && n="$n $S_YELLOW_NOTE"
+    [ "$1" = accent ] && [ "${COLOR_KEYS[$i]}" = yellow ] && n="$n $S_YELLOW_NOTE"
     printf '%s\n%s\n' "${COLOR_KEYS[$i]}" "$n"
   done
 }
@@ -258,19 +258,19 @@ if [ "$MODE" = "uninstall" ]; then
   yesno "$S_UN_CONFIRM" || abort
   SUDO_OK=0; sudo_keepalive && SUDO_OK=1
   [ -f "$HOME/.local/share/cinnamon/extensions/monterra-dock@monterra/extension.js" ] && \
-    step "$S_UN_DOCK" bash "$HERE/werkzeuge/dock.sh" --remove
-  [ -d "$HOME/.local/share/cinnamon/extensions/monterra-fenster@monterra" ] && \
-    step "$S_UN_WINDOWS" bash "$HERE/werkzeuge/fenster.sh" --remove
-  step "$S_UN_SETGRID" bash "$HERE/werkzeuge/einstellungen.sh" --remove
-  [ -d "$HOME/.local/share/cinnamon/extensions/monterra-fenstergroesse@monterra" ] && \
-    step "$S_UN_WINSIZE" bash "$HERE/werkzeuge/fenstergroesse.sh" --remove
+    step "$S_UN_DOCK" bash "$HERE/tools/dock.sh" --remove
+  { [ -d "$HOME/.local/share/cinnamon/extensions/monterra-window-shadows@monterra" ] || [ -d "$HOME/.local/share/cinnamon/extensions/monterra-fenster@monterra" ]; } && \
+    step "$S_UN_WINDOWS" bash "$HERE/tools/window-shadows.sh" --remove
+  step "$S_UN_SETGRID" bash "$HERE/tools/settings-grid.sh" --remove
+  { [ -d "$HOME/.local/share/cinnamon/extensions/monterra-window-size@monterra" ] || [ -d "$HOME/.local/share/cinnamon/extensions/monterra-fenstergroesse@monterra" ]; } && \
+    step "$S_UN_WINSIZE" bash "$HERE/tools/window-size.sh" --remove
   [ -f "$HOME/.config/autostart/monterra-automatik.desktop" ] && \
-    step "$S_UN_AUTO" bash "$HERE/werkzeuge/automatik.sh" --remove
+    step "$S_UN_AUTO" bash "$HERE/tools/auto-icons.sh" --remove
   [ -f "$HOME/.local/share/applications/monterra-symbolwerkstatt.desktop" ] && \
-    step "$S_UN_WERKST" python3 "$HERE/werkzeuge/symbolwerkstatt.py" --remove
-  step "$S_UN_APPICONS" python3 "$HERE/werkzeuge/programmsymbole.py" restore
+    step "$S_UN_WERKST" python3 "$HERE/tools/icon_workshop.py" --remove
+  step "$S_UN_APPICONS" python3 "$HERE/tools/app_icons.py" restore
   [ -d "$HOME/.local/share/monterra-webapps" ] && \
-    step "$S_UN_WEBAPPS" python3 "$HERE/werkzeuge/webapps.py" restore
+    step "$S_UN_WEBAPPS" python3 "$HERE/tools/webapps.py" restore
   FF_DONE=0
   for f in "$HOME"/.mozilla/firefox/*/chrome/monterra-prefs.txt "$HOME"/.config/mozilla/firefox/*/chrome/monterra-prefs.txt \
            "$HOME"/.var/app/org.mozilla.firefox/.mozilla/firefox/*/chrome/monterra-prefs.txt \
@@ -278,19 +278,20 @@ if [ "$MODE" = "uninstall" ]; then
            "$HOME"/snap/firefox/common/.mozilla/firefox/*/chrome/monterra-prefs.txt; do
     [ -e "$f" ] && FF_DONE=1
   done
-  [ "$FF_DONE" = 1 ] && step "$S_UN_FIREFOX" bash "$HERE/werkzeuge/firefox.sh" --remove
+  [ "$FF_DONE" = 1 ] && step "$S_UN_FIREFOX" bash "$HERE/tools/firefox.sh" --remove
   [ -f "$HOME/.config/monterra-thunderbird.conf" ] && \
-    step "$S_UN_THUNDERBIRD" bash "$HERE/werkzeuge/thunderbird.sh" --remove
+    step "$S_UN_THUNDERBIRD" bash "$HERE/tools/thunderbird.sh" --remove
   if [ "$SUDO_OK" = 1 ]; then
     [ -f /usr/share/folder-color-switcher/colors.d/Monterra.json ] && \
-      step "$S_UN_FOLDERS" bash "$HERE/werkzeuge/ordnerfarben.sh" --remove
+      step "$S_UN_FOLDERS" bash "$HERE/tools/folder-colors.sh" --remove
     [ -d /usr/share/plymouth/themes/monterra ] && \
-      step "$S_UN_SPLASH" sudo bash "$HERE/werkzeuge/bootsplash.sh" --remove
+      step "$S_UN_SPLASH" sudo bash "$HERE/tools/bootsplash.sh" --remove
     { [ -f /etc/lightdm/slick-greeter.conf.monterra-backup ] || [ -f /etc/lightdm/.monterra-had-no-conf ]; } && \
-      step "$S_UN_LOGIN" sudo bash "$HERE/werkzeuge/anmeldung.sh" --remove
+      step "$S_UN_LOGIN" sudo bash "$HERE/tools/login-screen.sh" --remove
   fi
-  step "$S_UN_RESTORE" bash "$HERE/werkzeuge/setup.sh" --restore
-  step "$S_UN_FILES" bash -c 'pkill -f monterra/akzent-sync.sh; rm -rf ~/.themes/Monterra ~/.themes/Monterra-* ~/.config/autostart/monterra-akzent-sync.desktop ~/.local/share/monterra/akzent-sync.sh ~/.local/share/monterra/akzent.py ~/.config/monterra-paket.conf ~/.icons/Monterra ~/.icons/Monterra-* ~/.config/monterra-buttons.conf ~/.config/monterra-akzent.conf ~/.config/monterra-sprache.conf ~/.config/monterra-firefox.conf ~/.local/share/monterra/ausstehend'
+  step "$S_UN_RESTORE" bash "$HERE/tools/setup.sh" --restore
+  pkill -f "monterra/(accent|akzent)-sync[.]sh" 2>/dev/null   # Abgleich beenden (eigener Aufruf, damit pkill den Schritt nicht selbst trifft)
+  step "$S_UN_FILES" bash -c 'rm -rf ~/.themes/Monterra ~/.themes/Monterra-* ~/.config/autostart/monterra-accent-sync.desktop ~/.config/autostart/monterra-akzent-sync.desktop ~/.local/share/monterra/accent-sync.sh ~/.local/share/monterra/accent.py ~/.local/share/monterra/akzent-sync.sh ~/.local/share/monterra/akzent.py ~/.config/monterra-paket.conf ~/.icons/Monterra ~/.icons/Monterra-* ~/.config/monterra-buttons.conf ~/.config/monterra-akzent.conf ~/.config/monterra-sprache.conf ~/.config/monterra-firefox.conf ~/.local/share/monterra/ausstehend'
   restart_cinnamon
   if [ ${#FAILED[@]} -eq 0 ]; then info "$S_UN_DONE"; else failed_report; fi
   exit 0
@@ -308,46 +309,46 @@ LAYOUT=$(radio menubar-dock "$S_Q_LAYOUT" \
   keep          "$S_LAYOUT_KEEP") || abort
 
 # Hintergrund: fünf Motive (mit Vorschaubildern)
-[ "$VARIANT" = dark ] && VS=Dunkel || VS=Hell
-PV="$HERE/vorschau/auswahl"
+[ "$VARIANT" = dark ] && VS=Dark || VS=Light
+PV="$HERE/previews/picker"
 if [ "$HAS_PICK" = 1 ]; then
   args=()
   for i in "${!MOTIF_KEYS[@]}"; do
-    m="$(motiv_von "${MOTIF_KEYS[$i]}")"
-    args+=("${MOTIF_KEYS[$i]}" "$PV/motiv-$m-$VS.png" "${S_MOTIFS[$i]}")
+    m="$(motif_of "${MOTIF_KEYS[$i]}")"
+    args+=("${MOTIF_KEYS[$i]}" "$PV/motif-$m-$VS.png" "${S_MOTIFS[$i]}")
   done
-  args+=(keep "$PV/motiv-keep-$VS.png" "$S_WALL_KEEP")
-  WALL=$(pick himmel "$S_Q_WALL" 4 "${args[@]}") || abort
+  args+=(keep "$PV/motif-keep-$VS.png" "$S_WALL_KEEP")
+  WALL=$(pick sky "$S_Q_WALL" 4 "${args[@]}") || abort
 else
   args=()
   for i in "${!MOTIF_KEYS[@]}"; do args+=("${MOTIF_KEYS[$i]}" "${S_MOTIFS[$i]}"); done
-  WALL=$(radio himmel "$S_Q_WALL" "${args[@]}" keep "$S_WALL_KEEP") || abort
+  WALL=$(radio sky "$S_Q_WALL" "${args[@]}" keep "$S_WALL_KEEP") || abort
 fi
 [ -n "$WALL" ] || abort
 
 # Akzentfarbe: „passend“ = Farbe zum gewählten (bzw. eingestellten) Motiv
 if [ "$WALL" = keep ]; then
   cur="$(gsettings get org.cinnamon.desktop.background picture-uri 2>/dev/null)"
-  CURMOT="$(echo "$cur" | sed -n 's#.*/Monterra-\([A-Za-z]*\)-\(Hell\|Dunkel\)\.jpg.*#\1#p')"
-  MATCH="$(cat "$HOME/.config/monterra-akzent.conf" 2>/dev/null | tr A-Z a-z)"
-  [ -n "$MATCH" ] || MATCH="$(akzent_zu_motiv "${CURMOT:-himmel}")"
+  CURMOT="$(motif_from_file "$cur")"
+  MATCH="$(python3 "$HERE/tools/accent.py" "$(cat "$HOME/.config/monterra-akzent.conf" 2>/dev/null)" 2>/dev/null | sed -n "s/^AKZENT_NAME='\(.*\)'/\1/p" | tr A-Z a-z)"
+  [ -n "$MATCH" ] || MATCH="$(accent_for_motif "${CURMOT:-sky}")"
 else
-  MATCH="$(akzent_zu_motiv "$WALL")"
+  MATCH="$(accent_for_motif "$WALL")"
 fi
-[ "$VARIANT" = dark ] && vs=dunkel || vs=hell
+[ "$VARIANT" = dark ] && vs=dark || vs=light
 if [ "$HAS_PICK" = 1 ]; then
-  args=(passend "$PV/akzent-$MATCH-$vs.png" "$S_ACCENT_MATCH – $(color_name "$MATCH")")
+  args=(match "$PV/accent-$MATCH-$vs.png" "$S_ACCENT_MATCH – $(color_name "$MATCH")")
   for i in "${!COLOR_KEYS[@]}"; do
-    n="${S_COLORS[$i]}"; [ "${COLOR_KEYS[$i]}" = gelb ] && n="$n $S_YELLOW_NOTE"
-    args+=("${COLOR_KEYS[$i]}" "$PV/akzent-${COLOR_KEYS[$i]}-$vs.png" "$n")
+    n="${S_COLORS[$i]}"; [ "${COLOR_KEYS[$i]}" = yellow ] && n="$n $S_YELLOW_NOTE"
+    args+=("${COLOR_KEYS[$i]}" "$PV/accent-${COLOR_KEYS[$i]}-$vs.png" "$n")
   done
-  AKZ=$(pick passend "$S_Q_ACCENT" 5 "${args[@]}") || abort
+  AKZ=$(pick match "$S_Q_ACCENT" 5 "${args[@]}") || abort
 else
   mapfile -t ACC_ARGS < <(color_args accent)
-  AKZ=$(radio passend "$S_Q_ACCENT" passend "$S_ACCENT_MATCH – $(color_name "$MATCH")" "${ACC_ARGS[@]}") || abort
+  AKZ=$(radio match "$S_Q_ACCENT" match "$S_ACCENT_MATCH – $(color_name "$MATCH")" "${ACC_ARGS[@]}") || abort
 fi
 [ -n "$AKZ" ] || abort
-[ "$AKZ" = passend ] && AKZ="$MATCH"
+[ "$AKZ" = match ] && AKZ="$MATCH"
 AKZ="$(echo "$AKZ" | tr A-Z a-z)"
 
 # Fensterknöpfe: Schieberegler 14–32 px in 2er-Schritten (bisherige Wahl vorbelegt)
@@ -371,7 +372,8 @@ for d in "$HOME/.thunderbird" "$HOME/.var/app/org.mozilla.Thunderbird" "$HOME/sn
   [ -e "$d" ] && HAS_TB=on
 done
 # Fensterschatten: nur vorausgewählt, wenn schon eingerichtet (sonst bleiben Mints Standardschatten)
-HAS_WIN=off; [ -d "$HOME/.local/share/cinnamon/extensions/monterra-fenster@monterra" ] && HAS_WIN=on
+HAS_WIN=off
+{ [ -d "$HOME/.local/share/cinnamon/extensions/monterra-window-shadows@monterra" ] || [ -d "$HOME/.local/share/cinnamon/extensions/monterra-fenster@monterra" ]; } && HAS_WIN=on
 EXTRAS=$(check "$S_Q_EXTRAS" \
   font     on  "$S_X_FONT" \
   appicons on  "$S_X_APPICONS" \
@@ -434,54 +436,54 @@ fi
 SETUP_ARGS=()
 [ "$VARIANT" = dark ] && SETUP_ARGS+=(--dark)
 [[ "$LAYOUT" == menubar-* ]] && SETUP_ARGS+=(--layout)
-if [ "$WALL" = keep ]; then SETUP_ARGS+=(--keep-wallpaper); else SETUP_ARGS+=("--motiv=$WALL"); fi
-SETUP_ARGS+=("--akzent=$AKZ")
-step "$S_I_SETUP" bash "$HERE/werkzeuge/setup.sh" "${SETUP_ARGS[@]}"
+if [ "$WALL" = keep ]; then SETUP_ARGS+=(--keep-wallpaper); else SETUP_ARGS+=("--motif=$WALL"); fi
+SETUP_ARGS+=("--accent=$AKZ")
+step "$S_I_SETUP" bash "$HERE/tools/setup.sh" "${SETUP_ARGS[@]}"
 
 # shellcheck disable=SC2059
-step "$(printf "$S_I_BUTTONS" "$BUTTONS")" bash "$HERE/werkzeuge/fensterknoepfe.sh" "$BUTTONS"
+step "$(printf "$S_I_BUTTONS" "$BUTTONS")" bash "$HERE/tools/window-buttons.sh" "$BUTTONS"
 
 # 3) Dock
 case "$LAYOUT" in
-  menubar-dock) step "$S_I_DOCK_NOPANEL" bash "$HERE/werkzeuge/dock.sh" --ohne-panel ;;
-  dock-only)    step "$S_I_DOCK" bash "$HERE/werkzeuge/dock.sh" ;;
+  menubar-dock) step "$S_I_DOCK_NOPANEL" bash "$HERE/tools/dock.sh" --no-panel ;;
+  dock-only)    step "$S_I_DOCK" bash "$HERE/tools/dock.sh" ;;
 esac
 
 # 4) Programm- und Web-App-Symbole
-has appicons && step "$S_I_APPICONS" python3 "$HERE/werkzeuge/programmsymbole.py" apply
+has appicons && step "$S_I_APPICONS" python3 "$HERE/tools/app_icons.py" apply
 has appicons && ls "$HOME"/.local/share/applications/WebApp-*.desktop >/dev/null 2>&1 && \
-  step "$S_I_WEBAPPS" python3 "$HERE/werkzeuge/webapps.py" apply
-has auto     && step "$S_I_AUTO" bash "$HERE/werkzeuge/automatik.sh"
-# mitgebrachte eigene Programmsymbole (Ordner meine-symbole) übernehmen
-MY_ICONS=("$HERE"/meine-symbole/*.zip)
-[ -e "${MY_ICONS[0]}" ] && step "$S_I_MYICONS" python3 "$HERE/werkzeuge/symbolwerkstatt.py" --import "${MY_ICONS[@]}"
-has werkst   && step "$S_I_WERKST" python3 "$HERE/werkzeuge/symbolwerkstatt.py" --install
+  step "$S_I_WEBAPPS" python3 "$HERE/tools/webapps.py" apply
+has auto     && step "$S_I_AUTO" bash "$HERE/tools/auto-icons.sh"
+# mitgebrachte eigene Programmsymbole (Ordner my-icons) übernehmen
+MY_ICONS=("$HERE"/my-icons/*.zip)
+[ -e "${MY_ICONS[0]}" ] && step "$S_I_MYICONS" python3 "$HERE/tools/icon_workshop.py" --import "${MY_ICONS[@]}"
+has werkst   && step "$S_I_WERKST" python3 "$HERE/tools/icon_workshop.py" --install
 if has setgrid; then
-  step "$S_I_SETGRID" bash "$HERE/werkzeuge/einstellungen.sh"
+  step "$S_I_SETGRID" bash "$HERE/tools/settings-grid.sh"
 elif grep -qs "Monterra – Starter" "$HOME/.local/bin/cinnamon-settings"; then
-  step "$S_UN_SETGRID" bash "$HERE/werkzeuge/einstellungen.sh" --remove
+  step "$S_UN_SETGRID" bash "$HERE/tools/settings-grid.sh" --remove
 fi
 if has fgroesse; then
-  step "$S_I_WINSIZE" bash "$HERE/werkzeuge/fenstergroesse.sh"
-elif [ -d "$HOME/.local/share/cinnamon/extensions/monterra-fenstergroesse@monterra" ]; then
-  step "$S_UN_WINSIZE" bash "$HERE/werkzeuge/fenstergroesse.sh" --remove
+  step "$S_I_WINSIZE" bash "$HERE/tools/window-size.sh"
+elif [ -d "$HOME/.local/share/cinnamon/extensions/monterra-window-size@monterra" ] || [ -d "$HOME/.local/share/cinnamon/extensions/monterra-fenstergroesse@monterra" ]; then
+  step "$S_UN_WINSIZE" bash "$HERE/tools/window-size.sh" --remove
 fi
 if has fenster; then
-  step "$S_I_WINDOWS" bash "$HERE/werkzeuge/fenster.sh"
+  step "$S_I_WINDOWS" bash "$HERE/tools/window-shadows.sh"
 elif [ "$HAS_WIN" = on ]; then
-  step "$S_UN_WINDOWS" bash "$HERE/werkzeuge/fenster.sh" --remove
+  step "$S_UN_WINDOWS" bash "$HERE/tools/window-shadows.sh" --remove
 fi
-has firefox  && step "$S_I_FIREFOX" bash "$HERE/werkzeuge/firefox.sh"
-has thunderb && step "$S_I_THUNDERBIRD" bash "$HERE/werkzeuge/thunderbird.sh"
+has firefox  && step "$S_I_FIREFOX" bash "$HERE/tools/firefox.sh"
+has thunderb && step "$S_I_THUNDERBIRD" bash "$HERE/tools/thunderbird.sh"
 
 # 5) Schritte mit Administratorrechten
 if [ "$SUDO_OK" = 1 ]; then
-  has folders && step "$S_I_FOLDERS" bash "$HERE/werkzeuge/ordnerfarben.sh"
+  has folders && step "$S_I_FOLDERS" bash "$HERE/tools/folder-colors.sh"
   if has splash; then
     if [ "$VARIANT" = dark ]; then
-      step "$S_I_SPLASH_DARK" sudo bash "$HERE/werkzeuge/bootsplash.sh"
+      step "$S_I_SPLASH_DARK" sudo bash "$HERE/tools/bootsplash.sh"
     else
-      step "$S_I_SPLASH_LIGHT" sudo bash "$HERE/werkzeuge/bootsplash.sh" --light
+      step "$S_I_SPLASH_LIGHT" sudo bash "$HERE/tools/bootsplash.sh" --light
     fi
   fi
   if has login; then
@@ -489,13 +491,13 @@ if [ "$SUDO_OK" = 1 ]; then
     LMOT="$WALL"
     if [ "$LMOT" = keep ]; then             # Farbe des gerade eingestellten Monterra-Hintergrunds
       cur="$(gsettings get org.cinnamon.desktop.background picture-uri 2>/dev/null)"
-      LMOT="$(echo "$cur" | sed -n 's#.*/Monterra-\([A-Za-z]*\)-\(Hell\|Dunkel\)\.jpg.*#\1#p' | tr A-Z a-z)"
-      [ -n "$LMOT" ] || LMOT=himmel
+      LMOT="$(motif_from_file "$cur" | tr A-Z a-z)"
+      [ -n "$LMOT" ] || LMOT=sky
     fi
     if [ "$VARIANT" = dark ]; then
-      step "$S_I_LOGIN_DARK" sudo bash "$HERE/werkzeuge/anmeldung.sh" --motiv "$LMOT"
+      step "$S_I_LOGIN_DARK" sudo bash "$HERE/tools/login-screen.sh" --motif "$LMOT"
     else
-      step "$S_I_LOGIN_LIGHT" sudo bash "$HERE/werkzeuge/anmeldung.sh" --motiv "$LMOT" --day
+      step "$S_I_LOGIN_LIGHT" sudo bash "$HERE/tools/login-screen.sh" --motif "$LMOT" --day
     fi
   fi
 elif has folders || has splash || has login; then

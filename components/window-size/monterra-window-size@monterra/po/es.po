@@ -1,0 +1,12 @@
+msgid ""
+msgstr ""
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Monterra Window Size"
+msgstr "Tamaño de ventana Monterra"
+
+msgid "Remembers the size and position of each app's window and restores them the next time it opens."
+msgstr "Recuerda el tamaño y la posición de la ventana de cada aplicación y los restaura la próxima vez que se abra."

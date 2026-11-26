@@ -1,0 +1,12 @@
+Monterra-Login-Blossom-Dark.jpg #541B48
+Monterra-Login-Blossom-Light.jpg #996E8B
+Monterra-Login-Desert-Dark.jpg #3F2118
+Monterra-Login-Desert-Light.jpg #A58154
+Monterra-Login-Jungle-Dark.jpg #072F24
+Monterra-Login-Jungle-Light.jpg #327660
+Monterra-Login-Mars-Dark.jpg #29110F
+Monterra-Login-Mars-Light.jpg #885C4A
+Monterra-Login-Silk-Dark.jpg #333337
+Monterra-Login-Silk-Light.jpg #919194
+Monterra-Login-Sky-Dark.jpg #13194A
+Monterra-Login-Sky-Light.jpg #6278A1
