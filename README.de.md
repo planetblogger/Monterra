@@ -4,6 +4,8 @@
 
 Monterra verwandelt Linux Mint 22.3 (Cinnamon 6.6, vorbereitet für Mint 23 / Cinnamon 6.8) in einen ruhigen, aufgeräumten Desktop mit Dock, Ampel-Fensterknöpfen und weichen Formen – in **Hell** und **Dunkel**. Vorschaubilder liegen im Ordner `previews/`.
 
+![Monterra – hell und dunkel](previews/monterra.jpg)
+
 ## Installation
 
 Im entpackten Ordner ein Terminal öffnen und starten (ohne `sudo`):
@@ -40,6 +42,16 @@ Der Installer fragt in kleinen Fenstern, was du möchtest, zeigt eine Zusammenfa
 - **Monterra Dock**: schlankes Dock als Cinnamon-Erweiterung – flüssige Vergrößerung, Drag-and-Drop (auch aus dem Menü), frei platzierbare Trenner, Papierkorb, automatisches Ausblenden. **Trenner:** Rechtsklick auf ein angeheftetes Programm → „Trenner links/rechts einfügen“; verschieben per Drag-and-Drop; entfernen per Rechtsklick auf den Trenner.
 - **Hintergründe in 4K**, abstrakt und ruhig, je hell und dunkel: **Himmel** (Blau, Indigo), **Wüste** (Orange, Gelb), **Mars** (Rot, Braun), **Dschungel** (Grün, Petrol, Cyan), **Seidentuch** (Grau, Graphit), **Blüte** (Lila, Pink)
 - **Boot-Splash**, **Anmeldebildschirm** (zeigt den gewählten Hintergrund weichgezeichnet), **Firefox-Look** (schlicht, mit Ampel-Knöpfen), **Thunderbird-Look** (ruhige Grautöne, Seitenleiste), **Programm- und Web-App-Symbole** im einheitlichen Monterra-Stil
+
+<p>
+  <img src="previews/desktop-light.png" width="49%" alt="Monterra hell">
+  <img src="previews/desktop-dark.png" width="49%" alt="Monterra dunkel">
+</p>
+
+![13 Akzentfarben](previews/accent-colors.jpg)
+![Monterra Dock](previews/dock.jpg)
+![12 Hintergründe in 4K](previews/wallpapers.jpg)
+![Passende Symbole](previews/icons.jpg)
 
 ## Ordnerübersicht
 

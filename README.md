@@ -5,7 +5,7 @@
 Made for **Linux Mint 22.3 (Cinnamon 6.6)**, prepared for Mint 23 / Cinnamon 6.8.
 🇩🇪 Deutsche Anleitung: [README.de.md](README.de.md) · 🇪🇸 El instalador también habla español.
 
-![Monterra themes](previews/themes.png)
+![Monterra – light and dark](previews/monterra.jpg)
 
 ## Install
 
@@ -32,9 +32,15 @@ Options: `bash setup.sh --text` (questions in the terminal) · `--lang=en`
 | **Wallpapers** | 6 abstract 4K motifs (Sky, Desert, Mars, Jungle, Silk, Blossom), each light and dark |
 | **More** | notifications, Alt+Tab switcher, lock screen, login screen, boot splash, Firefox and Thunderbird looks |
 
-![Dock](previews/dock.png)
-![Accent colours](previews/accent-colors.jpg)
-![Wallpapers](previews/wallpapers.jpg)
+<p>
+  <img src="previews/desktop-light.png" width="49%" alt="Monterra light">
+  <img src="previews/desktop-dark.png" width="49%" alt="Monterra dark">
+</p>
+
+![13 accent colours](previews/accent-colors.jpg)
+![Monterra Dock](previews/dock.jpg)
+![12 wallpapers in 4K](previews/wallpapers.jpg)
+![Matching icons](previews/icons.jpg)
 
 ## Tips
 
