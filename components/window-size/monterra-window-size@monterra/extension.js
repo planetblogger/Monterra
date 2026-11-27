@@ -111,6 +111,41 @@ function restore(win) {
     if (s.max) win.maximize(Meta.MaximizeFlags.BOTH);
 }
 
+// Cinnamons Öffnen-Effekt („traditional“) animiert die Bildschirmposition des Fensters ab der
+// Stelle, an der es beim Anzeigen stand. Wird das Fenster danach an die gemerkte Stelle gesetzt,
+// läuft die Animation trotzdem an der alten Stelle weiter und das Fenster springt erst an ihrem
+// Ende – genau der sichtbare Versatz. Deshalb die Positions-Animation an die neue Stelle holen.
+function followAnimation(win) {
+    let actor = win.get_compositor_private();
+    if (!actor) return;
+    let b = win.get_buffer_rect();
+    let moved = false;
+    for (let prop of ["x", "y"]) {
+        if (actor.get_transition(prop)) { actor.remove_transition(prop); moved = true; }
+    }
+    if (moved || actor.x !== b.x || actor.y !== b.y) actor.set_position(b.x, b.y);
+}
+
+function restoreNow(win) {
+    try {
+        if (!differs(win)) return;
+        restore(win);
+        followAnimation(win);
+    } catch (e) { global.logError("Monterra Fenstergröße: " + e); }
+}
+
+// weicht das Fenster von der gemerkten Größe ab? (Position nur, wenn sie übernommen wird)
+function differs(win) {
+    let s = store[keyOf(win)];
+    if (!s || s.w === undefined || s.max) return false;
+    let r = win.get_frame_rect();
+    let area = win.get_work_area_for_monitor(win.get_monitor());
+    let w = Math.min(s.w, area.width), h = Math.min(s.h, area.height);
+    let movePos = onScreen(win, s.x, s.y, s.w, s.h) && !otherWindowsOf(win, keyOf(win));
+    return Math.abs(r.width - w) > 2 || Math.abs(r.height - h) > 2 ||
+           (movePos && (Math.abs(r.x - s.x) > 2 || Math.abs(r.y - s.y) > 2));
+}
+
 function track(win) {
     if (tracked.has(win)) return;
     let ids = [
@@ -130,20 +165,36 @@ function untrack(win) {
 
 function onCreated(display, win) {
     if (!eligible(win)) return;
+    // Sofort anwenden, noch bevor das Fenster zum ersten Mal gezeichnet wird – so erscheint es
+    // gleich an der gemerkten Stelle in der gemerkten Größe (vorher sprang es kurz danach dorthin).
+    try { restore(win); } catch (e) { global.logError("Monterra Fenstergröße: " + e); }
+    // Cinnamon platziert ein neues Fenster erst beim Anzeigen und überschreibt dabei die Position.
+    // Diese Platzierung kommt als „position-changed“, noch bevor das Fenster gezeichnet wird –
+    // dann sofort zurück an die gemerkte Stelle (höchstens dreimal, nur bis zum ersten Bild).
+    let fixes = 0, placeId = 0;
+    try {
+        placeId = win.connect("position-changed", () => {
+            if (fixes >= 3 || !differs(win)) return;
+            fixes++;
+            // nicht mitten in Cinnamons eigener Verschiebung, sondern direkt vor dem nächsten Bild
+            Meta.later_add(Meta.LaterType.BEFORE_REDRAW, () => { restoreNow(win); return false; });
+        });
+    } catch (e) {}
     let done = false;
-    let apply = () => {
+    let check = () => {
         if (done) return;
         done = true;
-        try { restore(win); } catch (e) { global.logError("Monterra Fenstergröße: " + e); }
+        // manche Programme setzen beim Start noch einmal ihre eigene Größe – dann nachziehen
+        if (placeId) { try { win.disconnect(placeId); } catch (e) {} placeId = 0; }
+        restoreNow(win);
         track(win);
     };
-    // erst nach dem ersten Bild anwenden – dann hat das Programm seine eigene Größe schon gesetzt
     let actor = win.get_compositor_private();
     if (actor) {
-        let id = actor.connect("first-frame", () => { actor.disconnect(id); apply(); });
-        GLib.timeout_add(GLib.PRIORITY_DEFAULT, 1500, () => { apply(); return GLib.SOURCE_REMOVE; });
+        let id = actor.connect("first-frame", () => { actor.disconnect(id); check(); });
+        GLib.timeout_add(GLib.PRIORITY_DEFAULT, 1500, () => { check(); return GLib.SOURCE_REMOVE; });
     } else {
-        GLib.idle_add(GLib.PRIORITY_DEFAULT, () => { apply(); return GLib.SOURCE_REMOVE; });
+        GLib.idle_add(GLib.PRIORITY_DEFAULT, () => { check(); return GLib.SOURCE_REMOVE; });
     }
 }
 
