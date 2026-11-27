@@ -2,7 +2,7 @@
   "uuid": "monterra-dock@monterra",
   "name": "Monterra Dock",
   "description": "Slim, elegant dock: pinned and running apps, smooth magnification, drag-and-drop sorting, freely placeable separators, trash, auto-hide.",
-  "version": "1.4",
+  "version": "1.5",
   "cinnamon-version": [
     "5.8",
     "6.0",

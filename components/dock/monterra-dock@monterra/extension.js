@@ -532,7 +532,7 @@ class MonterraDock {
         this._connect(global.display, "notify::focus-window", () => { this._trackFocusWindow(); this._queueOverlap(); });
         try { this._connect(global.display, "grab-op-end", () => this._queueOverlap(50)); } catch (e) {}
         this._connect(global.display, "restacked", () => this._queueOverlap());
-        this._connect(global.window_manager, "switch-workspace", () => { this._updateDots(); this._queueOverlap(); });
+        this._connect(global.window_manager, "switch-workspace", () => { this._updateDots(); this._queueOverlap(); this._syncInputRegion(); });
         this._connect(global.window_manager, "minimize", () => this._queueOverlap());
         this._connect(global.window_manager, "unminimize", () => this._queueOverlap());
         this._connect(Main.layoutManager, "monitors-changed", () => { this._updateStruts(); this.kick(); });
@@ -567,7 +567,8 @@ class MonterraDock {
             this.container.ease({ opacity: 0, duration: 120, mode: Clutter.AnimationMode.EASE_OUT_QUAD });
         } else {
             this.container.reactive = true;
-            this.container.ease({ opacity: 255, duration: 160, mode: Clutter.AnimationMode.EASE_OUT_QUAD });
+            this.container.ease({ opacity: 255, duration: 160, mode: Clutter.AnimationMode.EASE_OUT_QUAD,
+                                  onComplete: () => this._syncInputRegion() });
             this.kick();
             this._queueOverlap(300);
         }
@@ -1291,13 +1292,27 @@ class MonterraDock {
         this._hidden = true;
         this.hideLabel();
         this.container.ease({ translation_y: this.container.height + MARGIN * scale() + 4, duration: 220,
-                              mode: Clutter.AnimationMode.EASE_IN_QUAD });
+                              mode: Clutter.AnimationMode.EASE_IN_QUAD,
+                              onComplete: () => this._syncInputRegion() });
     }
 
     _show() {
         if (!this._hidden) return;
         this._hidden = false;
-        this.container.ease({ translation_y: 0, duration: 200, mode: Clutter.AnimationMode.EASE_OUT_QUAD });
+        this.container.ease({ translation_y: 0, duration: 200, mode: Clutter.AnimationMode.EASE_OUT_QUAD,
+                              onComplete: () => this._syncInputRegion() });
+    }
+
+    // Cinnamon computes the clickable area of the dock (input region) from its on-screen position,
+    // but only when its size or visibility changes, on workspace switches and restacks – not when
+    // it slides in or out. After a workspace switch with the dock slid away, the area stayed below
+    // the screen and the dock ignored the mouse until something else triggered an update
+    // (e.g. a right-click on the desktop). So after every slide the area is updated explicitly.
+    _syncInputRegion() {
+        try {
+            const chrome = Main.layoutManager._chrome;
+            if (chrome && chrome._queueUpdateRegions) chrome._queueUpdateRegions();
+        } catch (e) { /* older/newer Cinnamon without this method */ }
     }
 
     // -------- style
