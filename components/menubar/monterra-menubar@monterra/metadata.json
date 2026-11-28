@@ -1,0 +1,9 @@
+{
+  "uuid": "monterra-menubar@monterra",
+  "name": "Monterra Menu Bar",
+  "description": "Classic menu bar: the Monterra logo opens the system menu, followed by one drop-down menu per app category. Opens on hover, Super opens app search.",
+  "version": "1.0",
+  "max-instances": 1,
+  "cinnamon-version": ["5.8", "6.0", "6.2", "6.4", "6.6", "6.8"],
+  "website": "https://github.com/planetblogger/Monterra"
+}

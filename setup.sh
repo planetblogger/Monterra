@@ -3,9 +3,12 @@
 #  Monterra – geführte Installation (alle Schritte mit Auswahl)
 #  Monterra – guided setup · Monterra – instalación guiada
 #
-#     bash setup.sh            -> Fragen in Fenstern (Zenity)
+#     bash setup.sh            -> Monterra-Assistent (eigenes Fenster mit Vorschaubildern)
+#     bash setup.sh --classic  -> Fragen in einzelnen Fenstern (Zenity)
 #     bash setup.sh --text     -> Fragen im Terminal
 #     bash setup.sh --lang=en  -> Sprache vorwählen (de | en | es)
+#     bash setup.sh --answers=DATEI -> ohne Fragen, Antworten aus DATEI (benutzt der Assistent;
+#                                      Passwort ggf. als erste Zeile auf der Standardeingabe)
 #
 #  Bitte im entpackten Monterra-Ordner aus einem Terminal starten
 #  (für Boot-Splash, Anmeldebildschirm usw. wird einmal das Passwort abgefragt).
@@ -18,17 +21,33 @@ UI="zenity"
 LANG_SEL=""
 # Umlaute in Dialogen brauchen eine UTF-8-Umgebung
 [ "$(locale charmap 2>/dev/null)" = "UTF-8" ] || export LC_ALL=C.UTF-8
+ANSWERS=""
+CLASSIC=0
 for a in "$@"; do
   case "$a" in
     --text) UI="text" ;;
+    --classic) CLASSIC=1 ;;
     --lang=*) LANG_SEL="${a#--lang=}" ;;
+    --answers=*) ANSWERS="${a#--answers=}" ;;
   esac
 done
-{ [ -z "$DISPLAY" ] && [ -z "$WAYLAND_DISPLAY" ]; } && UI="text"
-command -v zenity >/dev/null || UI="text"
+if [ -n "$ANSWERS" ]; then
+  # shellcheck disable=SC1090
+  . "$ANSWERS" || { echo "@@DONE error"; exit 1; }
+  UI="answers"
+fi
+# Mit grafischer Oberfläche: der Monterra-Assistent (fällt auf die Einzeldialoge zurück, wenn GTK fehlt)
+if [ "$UI" = "zenity" ] && [ "$CLASSIC" = 0 ] && { [ -n "$DISPLAY" ] || [ -n "$WAYLAND_DISPLAY" ]; } && \
+   python3 -c 'import gi; gi.require_version("Gtk", "3.0"); from gi.repository import Gtk' 2>/dev/null; then
+  exec python3 "$HERE/tools/wizard.py" "$@"
+fi
+if [ "$UI" != "answers" ]; then
+  { [ -z "$DISPLAY" ] && [ -z "$WAYLAND_DISPLAY" ]; } && UI="text"
+  command -v zenity >/dev/null || UI="text"
+fi
 
 # Per Doppelklick gestartet? -> in einem Terminalfenster neu öffnen (für die Passwortabfrage)
-if [ ! -t 0 ] && [ -z "$MONTERRA_IN_TERM" ] && { [ -n "$DISPLAY" ] || [ -n "$WAYLAND_DISPLAY" ]; }; then
+if [ "$UI" != "answers" ] && [ ! -t 0 ] && [ -z "$MONTERRA_IN_TERM" ] && { [ -n "$DISPLAY" ] || [ -n "$WAYLAND_DISPLAY" ]; }; then
   export MONTERRA_IN_TERM=1
   if command -v gnome-terminal >/dev/null; then exec gnome-terminal --title="Monterra" -- bash "$0" "$@"
   elif command -v x-terminal-emulator >/dev/null; then exec x-terminal-emulator -e bash "$0" "$@"; fi
@@ -162,6 +181,7 @@ check() {
 }
 
 yesno() {
+  [ "$UI" = "answers" ] && return 0
   if [ "$UI" = "zenity" ]; then
     zenity --question --title="$TITLE" --width=560 --ok-label="$S_YES" --cancel-label="$S_NO" --text="$1" 2>/dev/null
     return $?
@@ -174,6 +194,7 @@ yesno() {
 }
 
 info() {
+  if [ "$UI" = "answers" ]; then echo "@@INFO $1"; return; fi
   if [ "$UI" = "zenity" ]; then
     zenity --info --title="$TITLE" --width=580 --text="$1" 2>/dev/null
   else
@@ -188,18 +209,28 @@ FAILED=()
 step() {   # step "Beschreibung" befehl …
   local desc="$1"; shift
   echo
+  [ "$UI" = "answers" ] && echo "@@STEP $desc"
   echo "▶ $desc"
   echo "==== $(date '+%F %T') $desc" >> "$LOG"
   if "$@" 2>&1 | tee -a "$LOG" | sed 's/^/   /'; then
     [ "${PIPESTATUS[0]}" -eq 0 ] && return 0
   fi
   FAILED+=("$desc")
+  [ "$UI" = "answers" ] && echo "@@FAIL $desc"
   # shellcheck disable=SC2059
   echo "   $(printf "$S_STEP_FAILED" "$LOG")"
   return 1
 }
 
 sudo_keepalive() {
+  if [ "$UI" = "answers" ]; then
+    # Passwort kommt vom Assistenten als erste Zeile der Standardeingabe (nur im Speicher)
+    IFS= read -r MONTERRA_PW || MONTERRA_PW=""
+    [ -n "$MONTERRA_PW" ] || return 1
+    printf '%s\n' "$MONTERRA_PW" | command sudo -S -p '' -v 2>/dev/null || return 1
+    sudo() { printf '%s\n' "$MONTERRA_PW" | command sudo -S -p '' "$@"; }
+    return 0
+  fi
   echo
   echo "$S_SUDO_ASK"
   sudo -v || { echo "$S_SUDO_SKIP"; return 1; }
@@ -248,15 +279,19 @@ color_args() {   # key "Name" key "Name" …  (Gelb mit Hinweis auf dunkle Schri
 # ================================================================== START
 echo "==== Monterra $(date '+%F %T') ($LANG_SEL)" >> "$LOG"
 [ -n "$S_TOOL_NOTE" ] && echo "$S_TOOL_NOTE"
-MODE=$(radio install "$S_Q_MODE" \
-  install   "$S_MODE_INSTALL" \
-  uninstall "$S_MODE_UNINSTALL") || abort
+if [ "$UI" != "answers" ]; then
+  MODE=$(radio install "$S_Q_MODE" \
+    install   "$S_MODE_INSTALL" \
+    uninstall "$S_MODE_UNINSTALL") || abort
+fi
 [ -z "$MODE" ] && abort
 
 # ================================================================== UNINSTALL
 if [ "$MODE" = "uninstall" ]; then
   yesno "$S_UN_CONFIRM" || abort
   SUDO_OK=0; sudo_keepalive && SUDO_OK=1
+  [ -d "$HOME/.local/share/cinnamon/applets/monterra-menubar@monterra" ] && \
+    step "$S_UN_MENUBAR" bash "$HERE/tools/menubar.sh" --remove
   [ -f "$HOME/.local/share/cinnamon/extensions/monterra-dock@monterra/extension.js" ] && \
     step "$S_UN_DOCK" bash "$HERE/tools/dock.sh" --remove
   { [ -d "$HOME/.local/share/cinnamon/extensions/monterra-window-shadows@monterra" ] || [ -d "$HOME/.local/share/cinnamon/extensions/monterra-fenster@monterra" ]; } && \
@@ -294,10 +329,29 @@ if [ "$MODE" = "uninstall" ]; then
   step "$S_UN_FILES" bash -c 'rm -rf ~/.themes/Monterra ~/.themes/Monterra-* ~/.config/autostart/monterra-accent-sync.desktop ~/.config/autostart/monterra-akzent-sync.desktop ~/.local/share/monterra/accent-sync.sh ~/.local/share/monterra/accent.py ~/.local/share/monterra/akzent-sync.sh ~/.local/share/monterra/akzent.py ~/.config/monterra-paket.conf ~/.icons/Monterra ~/.icons/Monterra-* ~/.config/monterra-buttons.conf ~/.config/monterra-akzent.conf ~/.config/monterra-sprache.conf ~/.config/monterra-firefox.conf ~/.local/share/monterra/ausstehend'
   restart_cinnamon
   if [ ${#FAILED[@]} -eq 0 ]; then info "$S_UN_DONE"; else failed_report; fi
+  [ "$UI" = "answers" ] && { [ ${#FAILED[@]} -eq 0 ] && echo "@@DONE ok" || echo "@@DONE failed"; }
   exit 0
 fi
 
+# Akzentfarbe „passend“: Farbe zum gewählten (bzw. eingestellten) Motiv
+match_accent() {   # $1 = Motiv-Schlüssel oder keep
+  local cur curmot m
+  if [ "$1" = keep ]; then
+    cur="$(gsettings get org.cinnamon.desktop.background picture-uri 2>/dev/null)"
+    curmot="$(motif_from_file "$cur")"
+    m="$(python3 "$HERE/tools/accent.py" "$(cat "$HOME/.config/monterra-akzent.conf" 2>/dev/null)" 2>/dev/null | sed -n "s/^AKZENT_NAME='\(.*\)'/\1/p" | tr A-Z a-z)"
+    [ -n "$m" ] || m="$(accent_for_motif "${curmot:-sky}")"
+  else
+    m="$(accent_for_motif "$1")"
+  fi
+  echo "$m"
+}
+# Fensterschatten: nur vorausgewählt, wenn schon eingerichtet (sonst bleiben Mints Standardschatten)
+HAS_WIN=off
+{ [ -d "$HOME/.local/share/cinnamon/extensions/monterra-window-shadows@monterra" ] || [ -d "$HOME/.local/share/cinnamon/extensions/monterra-fenster@monterra" ]; } && HAS_WIN=on
+
 # ================================================================== QUESTIONS
+if [ "$UI" != "answers" ]; then
 VARIANT=$(radio light "$S_Q_VARIANT" \
   light "$S_VARIANT_LIGHT" \
   dark  "$S_VARIANT_DARK") || abort
@@ -327,14 +381,7 @@ fi
 [ -n "$WALL" ] || abort
 
 # Akzentfarbe: „passend“ = Farbe zum gewählten (bzw. eingestellten) Motiv
-if [ "$WALL" = keep ]; then
-  cur="$(gsettings get org.cinnamon.desktop.background picture-uri 2>/dev/null)"
-  CURMOT="$(motif_from_file "$cur")"
-  MATCH="$(python3 "$HERE/tools/accent.py" "$(cat "$HOME/.config/monterra-akzent.conf" 2>/dev/null)" 2>/dev/null | sed -n "s/^AKZENT_NAME='\(.*\)'/\1/p" | tr A-Z a-z)"
-  [ -n "$MATCH" ] || MATCH="$(accent_for_motif "${CURMOT:-sky}")"
-else
-  MATCH="$(accent_for_motif "$WALL")"
-fi
+MATCH="$(match_accent "$WALL")"
 [ "$VARIANT" = dark ] && vs=dark || vs=light
 if [ "$HAS_PICK" = 1 ]; then
   args=(match "$PV/accent-$MATCH-$vs.png" "$S_ACCENT_MATCH – $(color_name "$MATCH")")
@@ -348,8 +395,6 @@ else
   AKZ=$(radio match "$S_Q_ACCENT" match "$S_ACCENT_MATCH – $(color_name "$MATCH")" "${ACC_ARGS[@]}") || abort
 fi
 [ -n "$AKZ" ] || abort
-[ "$AKZ" = match ] && AKZ="$MATCH"
-AKZ="$(echo "$AKZ" | tr A-Z a-z)"
 
 # Fensterknöpfe: Schieberegler 14–32 px in 2er-Schritten (bisherige Wahl vorbelegt)
 CUR_BTN=16
@@ -371,9 +416,6 @@ HAS_TB=off
 for d in "$HOME/.thunderbird" "$HOME/.var/app/org.mozilla.Thunderbird" "$HOME/snap/thunderbird/common/.thunderbird"; do
   [ -e "$d" ] && HAS_TB=on
 done
-# Fensterschatten: nur vorausgewählt, wenn schon eingerichtet (sonst bleiben Mints Standardschatten)
-HAS_WIN=off
-{ [ -d "$HOME/.local/share/cinnamon/extensions/monterra-window-shadows@monterra" ] || [ -d "$HOME/.local/share/cinnamon/extensions/monterra-fenster@monterra" ]; } && HAS_WIN=on
 EXTRAS=$(check "$S_Q_EXTRAS" \
   font     on  "$S_X_FONT" \
   appicons on  "$S_X_APPICONS" \
@@ -387,6 +429,10 @@ EXTRAS=$(check "$S_Q_EXTRAS" \
   folders  on  "$S_X_FOLDERS" \
   splash   on  "$S_X_SPLASH" \
   login    on  "$S_X_LOGIN") || abort
+fi   # Ende der Fragen
+[ "$AKZ" = match ] && AKZ="$(match_accent "$WALL")"
+AKZ="$(echo "$AKZ" | tr A-Z a-z)"
+[[ "$BUTTONS" =~ ^[0-9]+$ ]] || BUTTONS=16
 
 has() { [[ ":$EXTRAS:" == *":$1:"* ]]; }
 
@@ -443,7 +489,8 @@ step "$S_I_SETUP" bash "$HERE/tools/setup.sh" "${SETUP_ARGS[@]}"
 # shellcheck disable=SC2059
 step "$(printf "$S_I_BUTTONS" "$BUTTONS")" bash "$HERE/tools/window-buttons.sh" "$BUTTONS"
 
-# 3) Dock
+# 3) Menüleiste und Dock
+[[ "$LAYOUT" == menubar-* ]] && step "$S_I_MENUBAR" bash "$HERE/tools/menubar.sh"
 case "$LAYOUT" in
   menubar-dock) step "$S_I_DOCK_NOPANEL" bash "$HERE/tools/dock.sh" --no-panel ;;
   dock-only)    step "$S_I_DOCK" bash "$HERE/tools/dock.sh" ;;
@@ -509,3 +556,4 @@ echo; echo "▶ $S_I_RESTART"
 restart_cinnamon
 
 if [ ${#FAILED[@]} -eq 0 ]; then info "$S_I_DONE"; else failed_report; fi
+[ "$UI" = "answers" ] && { [ ${#FAILED[@]} -eq 0 ] && echo "@@DONE ok" || echo "@@DONE failed"; }

@@ -18,7 +18,7 @@ Made for **Linux Mint 22.3 (Cinnamon 6.6)**, prepared for Mint 23 / Cinnamon 6.8
 
 The installer asks for your language first (Deutsch · English · Español), then lets you choose light or dark, panel and dock layout, wallpaper and accent colour (with previews), window-button size and optional extras. Your previous settings are backed up; **“Remove Monterra completely”** in the same installer restores everything.
 
-Options: `bash setup.sh --text` (questions in the terminal) · `--lang=en`
+The installer opens a Monterra-styled assistant with previews. Options: `bash setup.sh --classic` (separate dialogs as before) · `--text` (questions in the terminal) · `--lang=en`
 
 ## What you get
 
@@ -27,6 +27,7 @@ Options: `bash setup.sh --text` (questions in the terminal) · `--lang=en`
 | **Themes** | `Monterra` and `Monterra-Dark` for GTK 2/3/4, libadwaita and the Cinnamon desktop – built on Linux Mint's own Mint-Y, so every app and dialog keeps working |
 | **Accent colours** | 13 system colours, each as its own theme (`Monterra-Green`, `Monterra-Dark-Green` …), switchable any time in *System Settings → Themes* – desktop, folders, Firefox and Thunderbird follow automatically |
 | **Windows** | traffic-light buttons (size adjustable), rounded corners, soft shadows; optional: remember window size and position per app |
+| **Monterra Menu Bar** | top menu bar with logo menu (search, system settings, edit menu, sleep, restart, shut down, log out) and one drop-down per app category that opens on hover; right-click an app to add it to the dock or open its properties |
 | **Monterra Dock** | magnifying dock with running indicators, drag & drop, freely placeable separators, auto-hide |
 | **Icons & cursor** | squircle app icons, blue folders in 12 colours, Monterra cursor; *Icon Workshop* to design your own icons |
 | **Wallpapers** | 6 abstract 4K motifs (Sky, Desert, Mars, Jungle, Silk, Blossom), each light and dark |
@@ -45,6 +46,7 @@ Options: `bash setup.sh --text` (questions in the terminal) · `--lang=en`
 ## Tips
 
 - **4K screens:** set the monitor scaling to 200 % in *Display* settings, or run `gsettings set org.cinnamon.desktop.interface scaling-factor 2`.
+- **Update just the menu bar:** `bash tools/menubar.sh` · remove it: `bash tools/menubar.sh --remove`
 - **Update just the dock:** `bash tools/dock.sh`, then press Alt+F2, type `r`, Enter.
 - **Change accent colour from the terminal:** `bash tools/accent-color.sh green`
 

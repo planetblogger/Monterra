@@ -1,0 +1,14 @@
+{
+  "head-behaviour": { "type": "header", "description": "Behaviour" },
+  "open-on-hover": { "type": "switch", "default": true, "description": "Open menus when the mouse pointer rests on them" },
+  "hover-delay": { "type": "spinbutton", "default": 150, "min": 0, "max": 1000, "step": 50, "units": "ms",
+                   "description": "Delay before a menu opens", "dependency": "open-on-hover" },
+  "close-on-leave": { "type": "switch", "default": true, "description": "Close the menu when the mouse pointer leaves it",
+                      "dependency": "open-on-hover" },
+  "overlay-key": { "type": "keybinding", "default": "Super_L::Super_R", "description": "Keyboard shortcut to open the Monterra menu and search" },
+  "head-content": { "type": "header", "description": "Content" },
+  "show-search": { "type": "switch", "default": true, "description": "App search in the Monterra menu" },
+  "show-icons": { "type": "switch", "default": true, "description": "Show app icons in the menus" },
+  "show-system-categories": { "type": "switch", "default": false,
+                              "description": "Show “Administration” and “Preferences” in the menu bar (otherwise in the Monterra menu)" }
+}

@@ -27,7 +27,7 @@ Der Installer fragt in kleinen Fenstern, was du möchtest, zeigt eine Zusammenfa
 | Fensterknöpfe | Schieberegler 14–32 px in 2er-Schritten (Standard 16 px) |
 | Weitere Bestandteile | Schrift Inter 🔒 · Programm- und Web-App-Symbole · Automatik für neue Programme · Symbolwerkstatt · Fenstergröße merken · Weiche Fensterschatten (optional, vorab aus) · Firefox-Look · Thunderbird-Look · Ordnerfarben 🔒 · Boot-Splash 🔒 · Anmeldebildschirm 🔒 |
 
-🔒 = braucht einmal dein Passwort. Bisherige Einstellungen werden vorher gesichert; **„Monterra vollständig entfernen“** im selben Installer stellt alles wieder her. Der Installer kann beliebig oft gestartet werden (z. B. um von Hell auf Dunkel zu wechseln). Fragen im Terminal statt in Fenstern: `bash setup.sh --text` · Sprache vorwählen: `--lang=de|en|es` · Protokoll: `~/monterra-installer.log`
+🔒 = braucht einmal dein Passwort. Bisherige Einstellungen werden vorher gesichert; **„Monterra vollständig entfernen“** im selben Installer stellt alles wieder her. Der Installer kann beliebig oft gestartet werden (z. B. um von Hell auf Dunkel zu wechseln). Der Installer öffnet einen Assistenten im Monterra-Stil mit Vorschaubildern; einzelne Fenster wie früher: `bash setup.sh --classic` · Fragen im Terminal: `bash setup.sh --text` · Sprache vorwählen: `--lang=de|en|es` · Protokoll: `~/monterra-installer.log`
 
 ## Was enthalten ist
 
@@ -39,6 +39,7 @@ Der Installer fragt in kleinen Fenstern, was du möchtest, zeigt eine Zusammenfa
 - **Mitteilungen** als schwebende, abgerundete Karten; **Fensterwechsler (Alt+Tab)** als Reihe großer Symbole auf Milchglas, nur das gewählte Programm zeigt seinen Namen
 - **Sperrbildschirm:** große Uhr mit Datum, rundes Passwortfeld und runde Knöpfe auf Milchglas
 - **Symbole** „Monterra“: blaue Ordner, Squircle-Programmsymbole, Systemeinstellungen- und Menüleisten-Symbole, 12 Ordnerfarben; **Mauszeiger** „Monterra-Cursor“
+- **Monterra Menüleiste**: Leiste oben mit Logo-Menü (Suche, Über diesen Computer, Systemeinstellungen, Menü bearbeiten, Bereitschaft, Neu starten, Ausschalten, Abmelden) und je App-Kategorie einem Aufklappmenü, das beim Darüberfahren öffnet; die Super-Taste öffnet die Suche. Rechtsklick auf eine App → „Dem Dock hinzufügen“ oder „Eigenschaften“. Kategorien ändern, anlegen und löschen: Logo-Menü → „Menü bearbeiten …“.
 - **Monterra Dock**: schlankes Dock als Cinnamon-Erweiterung – flüssige Vergrößerung, Drag-and-Drop (auch aus dem Menü), frei platzierbare Trenner, Papierkorb, automatisches Ausblenden. **Trenner:** Rechtsklick auf ein angeheftetes Programm → „Trenner links/rechts einfügen“; verschieben per Drag-and-Drop; entfernen per Rechtsklick auf den Trenner.
 - **Hintergründe in 4K**, abstrakt und ruhig, je hell und dunkel: **Himmel** (Blau, Indigo), **Wüste** (Orange, Gelb), **Mars** (Rot, Braun), **Dschungel** (Grün, Petrol, Cyan), **Seidentuch** (Grau, Graphit), **Blüte** (Lila, Pink)
 - **Boot-Splash**, **Anmeldebildschirm** (zeigt den gewählten Hintergrund weichgezeichnet), **Firefox-Look** (schlicht, mit Ampel-Knöpfen), **Thunderbird-Look** (ruhige Grautöne, Seitenleiste), **Programm- und Web-App-Symbole** im einheitlichen Monterra-Stil
@@ -96,6 +97,7 @@ Alle Skripte im entpackten Ordner aufrufen, ohne `sudo` (sie fragen bei Bedarf s
 |---|---|
 | Theme, Symbole, Schrift, Knöpfe links aktivieren | `bash tools/setup.sh [--dark] [--layout] [--motif=desert\|--keep-wallpaper] [--accent=green]` |
 | Akzentfarbe wechseln (auch Ordner, Firefox, Thunderbird) | Systemeinstellungen → Themen → Anwendungen, oder `bash tools/accent-color.sh green` |
+| Monterra Menüleiste einrichten/aktualisieren · entfernen | `bash tools/menubar.sh` · `bash tools/menubar.sh --remove` |
 | Monterra Dock (optional unteres Panel entfernen) | `bash tools/dock.sh [--no-panel]` |
 | Systemeinstellungen: Symbole gleichmäßig ausrichten | `bash tools/settings-grid.sh` / `--remove` |
 | Fenstergröße merken ein/aus | `bash tools/window-size.sh` / `bash tools/window-size.sh --remove` |
